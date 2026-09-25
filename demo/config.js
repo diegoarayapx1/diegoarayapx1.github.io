@@ -13,7 +13,7 @@ window.LOCAL = {
 
   // Place ID de Google del local (botón de reseña). Se busca en:
   // https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder
-  googlePlaceId: "ChIJIyqrkfzEYpYR12HGgICtXjc",
+  googlePlaceId: "ChIJIXAoIb7aYpYRTr6jOgw-xnM",
 
   // Móvil chileno. Sirve "+56 9 1234 5678", "912345678" o "56912345678".
   whatsapp: "",
