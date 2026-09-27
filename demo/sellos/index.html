@@ -864,10 +864,12 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     panel: null,
     configSucia: false,
     recuperarAbierto: false, // el ícono de inicio abre Recuperar una sola vez
+    toqueSinSellar: null,    // pieza tocada sin tarjeta guardada (suma si la recupera con la llave)
   };
   // ¿Abierta desde el ícono de la pantalla de inicio?
   const esInicio = (() => { try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } })();
   const esIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const TXT_TRAER = 'Tu tarjeta vive en Safari: ábrela ahí (acercando el teléfono al atril), toca “Agregar la tarjeta a la pantalla de inicio” y agrega el ícono de nuevo. O copia tu llave en Safari, desde “Qué guardamos de ti”, y pégala abajo, en Recuperar.';
   const ahoraServidor = () => Date.now() + estado.desfase;
   const aLocal = (iso) => ms(iso) - estado.desfase;   // hora del servidor → reloj de este teléfono
 
@@ -944,8 +946,10 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
         }
       }
       await cargarTarjeta(pieza);
-      if (!estado.tarjeta) abrirAlta();
-      else await sellarCon(pieza, secretoDe(estado.local.id));
+      if (!estado.tarjeta) {
+        estado.toqueSinSellar = pieza;   // si recupera su tarjeta con la llave, este toque suma
+        abrirAlta();
+      } else await sellarCon(pieza, secretoDe(estado.local.id));
     } catch (e) {
       mostrarAviso('error', 'No se registró el toque', mensajeError(e));
     } finally {
@@ -980,6 +984,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
 
   const crearTarjeta = () => conBloqueo(async () => {
     cerrarHoja();
+    estado.toqueSinSellar = null;   // crear la tarjeta ya incluye el sello de este toque
     try {
       const r = await rpc('crear_tarjeta', { p_pieza: estado.pieza });
       aplicar(r);
@@ -1061,11 +1066,18 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       aplicar(r);
       // Si este teléfono ya conoce un sticker de ese local, lo reutiliza para el modo prueba.
       const piezas = leer().piezas || {};
-      const pieza = Object.keys(piezas).find((p) => piezas[p] === r.local.id) || null;
+      const toque = estado.toqueSinSellar;
+      const pieza = toque && piezas[toque] === r.local.id ? toque
+        : Object.keys(piezas).find((p) => piezas[p] === r.local.id) || null;
       recordarTarjeta(r.local.id, pieza, llave);
       estado.pieza = pieza;
       $('#in-recuperar').value = '';
       ponerMsg(msg, 'ok', `Listo, recuperaste tu tarjeta de ${r.local.nombre}.`);
+      // Llegó tocando el atril sin tarjeta guardada: ese toque suma ahora (con las reglas de siempre).
+      estado.toqueSinSellar = null;
+      if (toque && toque === pieza && !esInicio) {
+        try { await sellarCon(toque, llave); } catch (e) { mostrarAviso('error', 'No se registró el toque', mensajeError(e)); }
+      }
       render();
     } catch (e) {
       if (e.motivo === 'pieza_invalida') return ponerMsg(msg, 'error', 'No encontramos una tarjeta con esa llave.');
@@ -1202,23 +1214,51 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       <div class="fila-botones">
         <button type="button" class="btn primario" data-accion="crear">Crear tarjeta y sellar</button>
         <button type="button" class="btn" data-accion="cerrar-hoja">Ahora no</button>
-      </div>`;
+      </div>
+      <button type="button" class="btn enlace enlace-inicio" data-accion="ya-tengo">¿Ya tienes tarjeta? Recupérala con tu llave</button>`;
     $('#hoja').hidden = false;
     $('#hoja-fondo').hidden = false;
     const b = $('#hoja [data-accion="crear"]');
     if (b) b.focus();
   }
-  // Pantalla de inicio: iOS guarda la dirección que tiene la página en el momento de agregarla,
-  // pero no copia el almacenamiento de Safari. Por eso, mientras la hoja está abierta, la llave
-  // viaja en el fragmento (#k=…), que el navegador nunca envía a ningún servidor.
+  // Safari olvidó la tarjeta (o es otro teléfono): en vez de crear otra, se trae con la llave.
+  function yaTengo() {
+    cerrarHoja();
+    const det = $('#mis-datos');
+    det.hidden = false;
+    det.open = true;
+    const inp = $('#in-recuperar');
+    inp.scrollIntoView({ block: 'center' });
+    try { inp.focus({ preventScroll: true }); } catch (e) { inp.focus(); }
+  }
+
+  // Pantalla de inicio. iOS no copia el almacenamiento de Safari al ícono, y no hay documentación
+  // clara de qué dirección guarda (la actual o la de la última carga; el fragmento #… no siempre
+  // sobrevive). Por eso la llave va en la consulta (?k=) y con una navegación real: queda en las dos.
+  // El ícono la lee en cada apertura, así que la tarjeta sobrevive aunque iOS borre sus datos.
   let urlConLlave = false;
+  function llaveGuardada(llave) {
+    const t = leer().tarjetas || {};
+    return Object.keys(t).some((id) => t[id] && t[id].secreto === llave);
+  }
+  function dirSinLlave(s, v) {
+    const p = new URLSearchParams();
+    if (s) p.set('s', s); else if (v) p.set('v', v);
+    const qs = p.toString();
+    return `${location.pathname}${qs ? `?${qs}` : ''}${location.hash === '#local' ? '#local' : ''}`;
+  }
+  function irAInicio() {
+    const llave = secretoDe(estado.local && estado.local.id);
+    if (!llave) return;
+    const p = new URLSearchParams();
+    if (estado.pieza) p.set('v', estado.pieza);
+    p.set('k', llave);
+    location.replace(`${location.pathname}?${p.toString()}`);   // recarga; el arranque abre la hoja
+  }
   function abrirInicio() {
     const llave = secretoDe(estado.local && estado.local.id);
     if (!llave) return;
-    try {
-      history.replaceState(null, '', `${location.pathname}${estado.pieza ? `?v=${estado.pieza}` : ''}#k=${llave}`);
-      urlConLlave = true;
-    } catch (e) { urlConLlave = false; }
+    urlConLlave = true;
     focoPrevio = document.activeElement;
     const pasos = esIOS
       ? '<ol class="pasos"><li>Toca <strong>•••</strong> junto a la barra de direcciones de Safari y después <strong>Compartir</strong>. En iOS más antiguos, Compartir es directamente el cuadrado con la flecha hacia arriba.</li><li>Baja en la lista y elige <strong>Agregar a inicio</strong>.</li><li>Deja activado <strong>Abrir como app web</strong> (si aparece) y toca <strong>Agregar</strong>.</li></ol>'
@@ -1228,7 +1268,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       <h2 id="hoja-titulo">Tu tarjeta en la pantalla de inicio</h2>
       <p>Queda como un ícono para verla cuando quieras, sin buscar el link.</p>
       ${pasos}
-      <p class="nota">Deja esta ventana abierta mientras la agregas: así el ícono se lleva tu tarjeta. Para sumar sellos sigues acercando el teléfono al atril.</p>
+      <p class="nota">Deja esta ventana abierta mientras la agregas: la dirección lleva tu llave y así el ícono se lleva tu tarjeta. No envíes este enlace a nadie. Para sumar sellos sigues acercando el teléfono al atril.</p>
       <div class="fila-botones"><button type="button" class="btn primario" data-accion="cerrar-hoja">Listo</button></div>`;
     $('#hoja').hidden = false;
     $('#hoja-fondo').hidden = false;
@@ -1237,7 +1277,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
   function cerrarHoja() {
     if ($('#hoja').hidden) return;
     if (urlConLlave) {
-      try { history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (e) { /* nada */ }
+      const q = new URLSearchParams(location.search);
+      try { history.replaceState(null, '', dirSinLlave(normalizar(q.get('s')), normalizar(q.get('v')))); } catch (e) { /* nada */ }
       urlConLlave = false;
     }
     $('#hoja').hidden = true;
@@ -1314,7 +1355,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
         return `<div class="panel"><h3>Falta configurar la conexión</h3><p class="nota">Edita el archivo y pega la URL del proyecto y la clave publicable de Supabase en <span class="mono">SUPABASE_URL</span> y <span class="mono">SUPABASE_KEY</span>.</p></div>`;
       }
       if (esInicio) {
-        return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('info')}</span><h3>Trae tu tarjeta a este ícono</h3><p class="nota">En Safari, abre tu tarjeta, entra a “Qué guardamos de ti” y toca Copiar en la llave. Después pégala abajo, en Recuperar.</p></div>`;
+        return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('info')}</span><h3>Este ícono todavía no tiene tu tarjeta</h3><p class="nota">${TXT_TRAER}</p></div>`;
       }
       return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('nfc')}</span><h3>Acerca tu teléfono al atril</h3><p class="nota">Tu tarjeta de sellos aparece aquí la primera vez que tocas el sticker del local.</p></div>`;
     }
@@ -1357,9 +1398,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const ocupadoAttr = ocupado ? ' disabled' : '';
     if (!t) {
       if (esInicio) {
-        // En el ícono de inicio, lo normal es traer la tarjeta que ya existe en Safari, no crear otra.
-        return `<p class="nota">¿Ya tienes tarjeta en Safari? Tráela con tu llave: ábrela en Safari, entra a “Qué guardamos de ti”, copia la llave y pégala abajo, en Recuperar.</p>
-          <button type="button" class="btn btn-ancho" data-accion="alta"${ocupadoAttr}>Crear una tarjeta nueva</button>`;
+        // El ícono no crea tarjetas: los toques del atril abren Safari, así que una tarjeta creada
+        // aquí quedaría separada de la que suma sellos. Solo se trae la que ya existe.
+        return `<p class="nota">${TXT_TRAER}</p>`;
       }
       return `<button type="button" class="btn primario btn-ancho" data-accion="alta"${ocupadoAttr}>Crear mi tarjeta</button>
         <p class="nota">La creas una vez y cada visita suma con solo acercar el teléfono al atril.</p>`;
@@ -1394,7 +1435,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
   function htmlDatos() {
     const l = estado.local, t = estado.tarjeta;
     if (!t) {
-      return `<p class="nota">Todavía no tienes tarjeta en este teléfono. Cuando la crees, aquí verás todo lo que se guarda.</p>`;
+      return esInicio
+        ? `<p class="nota">Este ícono todavía no tiene tu tarjeta. Cuando la traigas, aquí verás todo lo que se guarda.</p>`
+        : `<p class="nota">Todavía no tienes tarjeta en este teléfono. Cuando la crees, aquí verás todo lo que se guarda.</p>`;
     }
     const llave = secretoDe(l.id) || '';
     const llaveTxt = estado.verLlave ? formatoLlave(llave) : `${llave.slice(0, 4)}-••••-••••`;
@@ -1642,7 +1685,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       if (!b || b.disabled) return;
       switch (b.dataset.accion) {
         case 'alta': abrirAlta(); break;
-        case 'inicio': abrirInicio(); break;
+        case 'inicio': irAInicio(); break;
+        case 'ya-tengo': yaTengo(); break;
         case 'crear': crearTarjeta(); break;
         case 'cerrar-hoja': cerrarHoja(); break;
         case 'simular': simularToque(); break;
@@ -1693,12 +1737,27 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
   async function iniciar() {
     cablear();
     const q = new URLSearchParams(location.search);
-    const s = normalizar(q.get('s'));
-    const v = normalizar(q.get('v'));
-    // Llave que trae el ícono de la pantalla de inicio (#k=…). Se lee y se borra de la barra.
+    let s = normalizar(q.get('s'));
+    let v = normalizar(q.get('v'));
+    // El ícono de inicio nunca suma sellos: eso lo hace el atril, que siempre abre Safari.
+    if (esInicio && s) { v = s; s = ''; }
+    // Llave para el ícono de inicio: ?k= (o #k=, versión anterior).
+    const kq = normalizar(q.get('k'));
     const mk = /^#k=([0-9A-Za-z-]{12,16})$/.exec(location.hash);
-    const llaveUrl = mk ? normalizar(mk[1]) : null;
-    if (mk) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* nada */ } }
+    const llaveUrl = kq || (mk ? normalizar(mk[1]) : '');
+    const conocida = llaveUrl.length === 12 && llaveGuardada(llaveUrl);
+    if (llaveUrl && !esInicio && !conocida) {
+      // En Safari solo vale la llave que este teléfono ya tiene (la del botón "Agregar a inicio").
+      // Un link con una llave ajena no se adopta: se descarta con una navegación real,
+      // para que tampoco quede en la dirección que guardaría un ícono.
+      location.replace(dirSinLlave(s, v));
+      return;
+    }
+    // Venimos del botón "Agregar a inicio": la llave queda en la barra solo mientras la hoja está abierta.
+    const hojaInicio = !!kq && conocida && !esInicio && !s;
+    if ((llaveUrl && !hojaInicio) || (esInicio && q.get('s'))) {
+      try { history.replaceState(null, '', dirSinLlave(s, v)); } catch (e) { /* nada */ }
+    }
     if (location.hash === '#local') estado.vista = 'local';
     cambiarVista(estado.vista);
 
@@ -1719,11 +1778,14 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       render();
     });
 
-    if (llaveUrl && llaveUrl.length === 12) {
+    // En el ícono, la llave de su dirección manda: se adopta si es válida para ese local
+    // (también reemplaza una tarjeta vieja que hubiera quedado guardada en el ícono).
+    if (esInicio && llaveUrl.length === 12 && !conocida) {
+      const pv = v && v.length === 8 ? v : null;
       try {
-        const r = await rpc('tarjeta_estado', { p_pieza: null, p_secreto: llaveUrl });
-        if (r.tarjeta) recordarTarjeta(r.local.id, v && v.length === 8 ? v : null, llaveUrl);
-      } catch (e) { /* sin conexión: sigue con lo que haya guardado */ }
+        const r = await rpc('tarjeta_estado', { p_pieza: pv, p_secreto: llaveUrl });
+        if (r.tarjeta) recordarTarjeta(r.local.id, pv, llaveUrl);
+      } catch (e) { /* sin conexión o sticker desactivado: sigue con lo que haya guardado */ }
     }
 
     try {
@@ -1750,6 +1812,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     }
     if (estado.tarjeta && estado.tarjeta.canje) vigilarCanje();
     render();
+    if (hojaInicio && estado.tarjeta && estado.vista === 'tarjeta' && secretoDe(estado.local.id) === llaveUrl) abrirInicio();
+    else if (hojaInicio) { try { history.replaceState(null, '', dirSinLlave(s, v)); } catch (e) { /* nada */ } }
     if (estado.vista === 'local') cargarPanel();
   }
 
