@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Tarjeta de Sellos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@500;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<style>
+:root {
+  --bg: #EDF1F0;
+  --surface: #FFFFFF;
+  --surface-2: #F4F7F6;
+  --ink: #132A30;
+  --muted: #55686D;
+  --faint: #8B9B9F;
+  --line: #D4DDDC;
+  --grid: #E2E9E8;
+  --primary: #1D4650;
+  --primary-hover: #163943;
+  --on-primary: #FFFFFF;
+  --accent: #BF9B4F;
+  --accent-soft: #F3EAD5;
+  --accent-ink: #5A4312;
+  --on-accent: #241A05;
+  --ok: #2B7553;
+  --ok-soft: #E2F0E8;
+  --ok-line: #B5D8C5;
+  --warn: #8F5B0E;
+  --warn-soft: #F7ECD6;
+  --warn-line: #E6CE9E;
+  --bad: #AE2A22;
+  --bad-soft: #F7E2DF;
+  --bad-line: #E8B6B0;
+  --paper: #FBFAF6;
+  --paper-edge: #DFDACE;
+  --paper-ink: #1E292C;
+  --paper-muted: #6A7275;
+  --paper-accent: #97722A;
+  --bar: #1D4650;
+  --bar-hover: #2E6574;
+  --shadow-sm: 0 1px 2px rgba(19, 42, 48, .08);
+  --shadow: 0 1px 2px rgba(19, 42, 48, .06), 0 10px 28px rgba(19, 42, 48, .10);
+  --scrim: rgba(10, 22, 25, .45);
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0C1618;
+    --surface: #132226;
+    --surface-2: #192B30;
+    --ink: #E2EBEB;
+    --muted: #9AABAF;
+    --faint: #6C7F84;
+    --line: #27393E;
+    --grid: #1F3035;
+    --primary: #8CC3CD;
+    --primary-hover: #A7D4DC;
+    --on-primary: #0A1A1D;
+    --accent: #D6B46A;
+    --accent-soft: #3A3020;
+    --accent-ink: #EFD9A6;
+    --on-accent: #231904;
+    --ok: #72C69D;
+    --ok-soft: #15302A;
+    --ok-line: #25503F;
+    --warn: #E5AA57;
+    --warn-soft: #36291A;
+    --warn-line: #5C4526;
+    --bad: #F08D83;
+    --bad-soft: #3A1D1B;
+    --bad-line: #663530;
+    --paper: #E5E1D7;
+    --paper-edge: #C8C1B2;
+    --paper-ink: #1E292C;
+    --paper-muted: #5A6366;
+    --paper-accent: #86621E;
+    --bar: #8CC3CD;
+    --bar-hover: #B5DDE4;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px rgba(0, 0, 0, .38);
+    --scrim: rgba(0, 0, 0, .55);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0C1618;
+  --surface: #132226;
+  --surface-2: #192B30;
+  --ink: #E2EBEB;
+  --muted: #9AABAF;
+  --faint: #6C7F84;
+  --line: #27393E;
+  --grid: #1F3035;
+  --primary: #8CC3CD;
+  --primary-hover: #A7D4DC;
+  --on-primary: #0A1A1D;
+  --accent: #D6B46A;
+  --accent-soft: #3A3020;
+  --accent-ink: #EFD9A6;
+  --on-accent: #231904;
+  --ok: #72C69D;
+  --ok-soft: #15302A;
+  --ok-line: #25503F;
+  --warn: #E5AA57;
+  --warn-soft: #36291A;
+  --warn-line: #5C4526;
+  --bad: #F08D83;
+  --bad-soft: #3A1D1B;
+  --bad-line: #663530;
+  --paper: #E5E1D7;
+  --paper-edge: #C8C1B2;
+  --paper-ink: #1E292C;
+  --paper-muted: #5A6366;
+  --paper-accent: #86621E;
+  --bar: #8CC3CD;
+  --bar-hover: #B5DDE4;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px rgba(0, 0, 0, .38);
+  --scrim: rgba(0, 0, 0, .55);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-inline: 16px;
+  padding-block: 0 64px;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+ul, ol { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); }
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- Barra ---------- */
+.barra {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+  max-width: 980px;
+  margin-inline: auto;
+  padding-block: 12px 10px;
+}
+.barra-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.marca { font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: -0.015em; display: flex; align-items: center; gap: 8px; }
+.etiqueta {
+  font-family: var(--font-body); font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink);
+}
+.modo { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); text-align: right; }
+.modo .punto { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; }
+.modo[data-estado="db"] .punto { background: var(--ok); }
+.modo[data-estado="local"] .punto { background: var(--accent); }
+.modo[data-estado="error"] .punto { background: var(--bad); }
+
+.pestanas { display: flex; gap: 4px; padding: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+.pestanas button {
+  flex: 1; border: 0; background: transparent; padding: 8px 6px; border-radius: 9px;
+  font-weight: 600; font-size: 14px; color: var(--muted); cursor: pointer; white-space: nowrap;
+}
+.pestanas button:hover { color: var(--ink); }
+.pestanas button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+.principal { max-width: 980px; margin-inline: auto; padding-top: 18px; }
+.vista-tarjeta { max-width: 460px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- Tarjeta ---------- */
+.tarjeta {
+  --tinta: #5B3F95;
+  position: relative;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border-radius: 16px;
+  padding: 22px 20px 18px 34px;
+  box-shadow: var(--shadow), inset 0 0 0 1px var(--paper-edge);
+}
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  left: 12px; top: 18px; bottom: 18px;
+  width: 6px;
+  background-image: radial-gradient(circle at 50% 50%, var(--bg) 0 2.2px, transparent 2.7px);
+  background-size: 6px 13px;
+  background-repeat: repeat-y;
+}
+.tarjeta::after {
+  content: "";
+  position: absolute;
+  left: 23px; top: 14px; bottom: 14px;
+  border-left: 1px dashed var(--paper-edge);
+}
+.t-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.t-eyebrow { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--paper-muted); }
+.t-nombre { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; margin-top: 3px; color: var(--paper-ink); overflow-wrap: anywhere; }
+.t-cuenta { font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: var(--paper-muted); white-space: nowrap; padding-top: 2px; }
+.t-cuenta b { color: var(--paper-ink); font-size: 24px; }
+.t-grilla { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 10px 12px; margin-block: 18px 16px; }
+.t-slot { position: relative; aspect-ratio: 1 / 1; max-width: 100%; display: grid; place-items: center; }
+.t-vacio {
+  width: 84%; height: 84%; border-radius: 50%;
+  border: 1.5px dashed var(--paper-edge);
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 12px; color: var(--paper-muted);
+}
+.t-slot.premio .t-vacio {
+  border: 2px dashed var(--paper-accent);
+  color: var(--paper-accent);
+  font-family: var(--font-body); font-weight: 800; font-size: 9.5px; letter-spacing: .12em;
+}
+.sello {
+  display: block;
+  width: 100%; height: 100%;
+  color: var(--tinta);
+  opacity: .9;
+  transform: rotate(var(--giro, 0deg)) translate(var(--dx, 0%), var(--dy, 0%));
+}
+.sello text { font-family: var(--font-display); fill: currentColor; }
+.sello .s-arco { font-size: 7px; font-weight: 700; letter-spacing: 1px; }
+.sello .s-dia { font-size: 25px; font-weight: 800; }
+.sello .s-mes { font-size: 9.5px; font-weight: 700; letter-spacing: 2.2px; }
+.sello.nuevo { animation: estampar 480ms cubic-bezier(.2, .8, .25, 1.15) both; }
+@keyframes estampar {
+  0% { opacity: 0; transform: rotate(var(--giro, 0deg)) translate(var(--dx, 0%), var(--dy, 0%)) scale(1.5); }
+  55% { opacity: .96; }
+  100% { opacity: .9; transform: rotate(var(--giro, 0deg)) translate(var(--dx, 0%), var(--dy, 0%)) scale(1); }
+}
+.tarjeta.golpe { animation: golpe 380ms ease-out 170ms both; }
+@keyframes golpe {
+  0% { transform: none; }
+  30% { transform: translateY(2px) scale(.994); }
+  100% { transform: none; }
+}
+.t-pie {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 6px 12px; flex-wrap: wrap;
+  border-top: 1px solid var(--paper-edge); padding-top: 12px;
+}
+.t-progreso { font-size: 14px; color: var(--paper-ink); }
+.t-premio { font-weight: 700; }
+.t-codigo { font-family: var(--font-mono); font-size: 12px; color: var(--paper-muted); letter-spacing: .04em; }
+
+/* ---------- Avisos ---------- */
+.aviso {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: start;
+  padding: 12px 12px 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); font-size: 14px;
+}
+.aviso > .ico { width: 20px; height: 20px; margin-top: 1px; }
+.aviso strong { display: block; font-weight: 700; }
+.aviso span { color: var(--ink); }
+.aviso.ok { background: var(--ok-soft); border-color: var(--ok-line); }
+.aviso.ok > .ico { color: var(--ok); }
+.aviso.espera { background: var(--warn-soft); border-color: var(--warn-line); }
+.aviso.espera > .ico { color: var(--warn); }
+.aviso.error { background: var(--bad-soft); border-color: var(--bad-line); }
+.aviso.error > .ico { color: var(--bad); }
+.aviso.info > .ico { color: var(--primary); }
+.aviso-x {
+  border: 0; background: transparent; color: var(--muted); cursor: pointer;
+  width: 28px; height: 28px; margin: -4px -4px 0 0; border-radius: 8px; font-size: 20px; line-height: 1;
+}
+.aviso-x:hover { color: var(--ink); background: var(--surface-2); }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 16px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none;
+}
+.btn:hover { border-color: var(--faint); }
+.btn .ico { width: 18px; height: 18px; }
+.btn.primario { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.btn.primario:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn.premio { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.premio:hover { filter: brightness(1.05); }
+.btn.peligro { color: var(--bad); border-color: var(--bad-line); }
+.btn.peligro:hover { background: var(--bad-soft); }
+.btn.enlace {
+  border: 0; background: none; padding: 0 2px; min-height: 0; color: var(--primary);
+  text-decoration: underline; text-underline-offset: 3px; font-weight: 600; font-size: 13.5px;
+}
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.btn-ancho { width: 100%; }
+.fila-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Acciones de la tarjeta ---------- */
+.acciones { display: flex; flex-direction: column; gap: 10px; }
+.estado-linea { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+.estado-linea .ico { width: 18px; height: 18px; flex: none; }
+.estado-linea.listo .ico { color: var(--ok); }
+.nota { font-size: 13px; color: var(--muted); }
+.ticket {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm);
+  padding: 20px 18px; text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center;
+}
+.tk-lbl { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.tk-num { font-family: var(--font-mono); font-weight: 700; font-size: 54px; letter-spacing: .14em; line-height: 1.05; padding-left: .14em; }
+.tk-txt { font-size: 14.5px; max-width: 32ch; }
+.tk-vence { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- Mis datos ---------- */
+.datos { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 16px; }
+.datos > summary {
+  cursor: pointer; padding: 14px 0; font-weight: 600; list-style: none;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.datos > summary::-webkit-details-marker { display: none; }
+.datos > summary::after { content: "+"; font-family: var(--font-mono); font-size: 18px; color: var(--muted); }
+.datos[open] > summary::after { content: "−"; }
+.datos-cuerpo { display: flex; flex-direction: column; gap: 14px; padding-bottom: 16px; }
+.datos-lista { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 14px; margin: 0; }
+.datos-lista dt { color: var(--muted); }
+.datos-lista dd { margin: 0; overflow-wrap: anywhere; }
+.fechas {
+  list-style: none; padding: 0; margin: 6px 0 0;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  display: flex; flex-direction: column; gap: 2px; max-height: 9.5em; overflow-y: auto;
+}
+.espejo { border: 1px dashed var(--line); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.espejo-lbl { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.espejo .lista li { border-bottom: 0; padding-block: 6px; }
+.confirmar { border: 1px solid var(--bad-line); background: var(--bad-soft); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.recuperar { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--grid); padding-top: 14px; }
+.recuperar label { font-size: 13.5px; font-weight: 600; }
+
+/* ---------- Formularios ---------- */
+.fila { display: flex; gap: 8px; }
+.fila > input { flex: 1; min-width: 0; }
+input[type="text"], select {
+  width: 100%; min-height: 44px; padding: 9px 12px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface-2); color: var(--ink); font-size: 16px;
+}
+input[type="text"]:focus, select:focus { border-color: var(--primary); }
+.in-codigo { font-family: var(--font-mono); font-size: 22px !important; letter-spacing: .3em; text-align: center; }
+.msg { font-size: 13.5px; min-height: 1.35em; }
+.msg.ok { color: var(--ok); }
+.msg.error { color: var(--bad); }
+.form-config { display: flex; flex-direction: column; gap: 14px; }
+.campo { display: flex; flex-direction: column; gap: 6px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.campo > label, .campo > legend { font-size: 13.5px; font-weight: 600; padding: 0; margin-bottom: 6px; }
+.campo > label { margin-bottom: 0; }
+.ayuda { font-size: 12.5px; color: var(--muted); }
+.segmentado { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.segmentado input, .tintas input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.segmentado label {
+  flex: 1; text-align: center; padding: 7px 0; border-radius: 7px; cursor: pointer;
+  font-family: var(--font-mono); font-weight: 700; color: var(--muted);
+}
+.segmentado input:checked + label { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+.segmentado input:focus-visible + label { outline: 2px solid var(--primary); outline-offset: 1px; }
+.tintas { display: flex; gap: 8px; flex-wrap: wrap; }
+.tintas label {
+  display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; border-radius: 999px;
+  border: 1px solid var(--line); cursor: pointer; font-size: 13px; font-weight: 600; background: var(--surface);
+}
+.tintas label i { width: 22px; height: 22px; border-radius: 50%; background: var(--c); }
+.tintas input:checked + label { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.tintas input:focus-visible + label { outline: 2px solid var(--primary); outline-offset: 2px; }
+.fila-acciones { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* ---------- Panel del local ---------- */
+.vista-local { display: flex; flex-direction: column; gap: 16px; }
+.cab-vista { display: flex; flex-direction: column; gap: 4px; }
+.titulo-vista { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
+.sub { color: var(--muted); font-size: 14px; }
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.kpi-lbl { font-size: 12.5px; color: var(--muted); }
+.kpi-val { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin-top: 2px; }
+.avisos-local { display: flex; flex-direction: column; gap: 8px; }
+.avisos-local:empty { display: none; }
+.rejilla { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+}
+.panel h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.005em; }
+@media (min-width: 760px) {
+  .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel-ancho { grid-column: 1 / -1; }
+}
+
+.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.lista li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--grid);
+}
+.lista li:last-child { border-bottom: 0; }
+.l-izq { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.l-cod { font-family: var(--font-mono); font-weight: 700; font-size: 13.5px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.l-der { text-align: right; }
+.l-num { font-family: var(--font-mono); font-weight: 700; font-size: 14px; }
+.l-meta { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.chip {
+  font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: .01em;
+  padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+}
+.chip.tu { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.chip.listo { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
+.chip.pend { background: var(--warn-soft); color: var(--warn); border-color: var(--warn-line); }
+.puntos { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.puntos i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--faint); }
+.puntos i.on { background: var(--primary); border-color: var(--primary); }
+
+.feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.feed li { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 14px; }
+.feed .ic { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; }
+.feed .ic .ico { width: 14px; height: 14px; }
+.ic.sello { background: var(--ok-soft); color: var(--ok); }
+.ic.bloq { background: var(--warn-soft); color: var(--warn); }
+.ic.canje { background: var(--accent-soft); color: var(--accent-ink); }
+.ic.pedido { background: var(--surface-2); color: var(--muted); }
+.feed time { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+
+.grafico { position: relative; min-height: 190px; }
+.grafico svg { display: block; overflow: visible; }
+.g-grid { stroke: var(--grid); stroke-width: 1; shape-rendering: crispEdges; }
+.g-base { stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; }
+.g-eje { font-family: var(--font-body); font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.g-barra { fill: var(--bar); transition: fill 120ms ease; }
+.g-col { outline: none; }
+.g-col:hover .g-barra, .g-col:focus .g-barra { fill: var(--bar-hover); }
+.g-hit { fill: transparent; }
+.g-col:focus-visible .g-hit { stroke: var(--primary); stroke-width: 2; rx: 6; }
+.g-valor { font-family: var(--font-body); font-size: 11.5px; font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.tooltip {
+  position: absolute; pointer-events: none; z-index: 2;
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow);
+  border-radius: 8px; padding: 6px 10px; font-size: 12.5px; white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 10px));
+}
+.tooltip strong { display: block; font-size: 14px; }
+.tooltip span { color: var(--muted); }
+.tabla-vista > summary { font-size: 13px; color: var(--muted); cursor: pointer; width: fit-content; }
+.tabla-scroll { overflow-x: auto; }
+.tabla-vista table { border-collapse: collapse; font-size: 13px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.tabla-vista th, .tabla-vista td { padding: 4px 18px 4px 0; text-align: left; border-bottom: 1px solid var(--grid); }
+.tabla-vista th { color: var(--muted); font-weight: 600; }
+
+.codigo-url {
+  font-family: var(--font-mono); font-size: 12.5px; background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 10px; overflow-wrap: anywhere; user-select: all; -webkit-user-select: all;
+}
+.pasos { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+
+/* ---------- Cómo funciona ---------- */
+.vista-info { max-width: 680px; margin-inline: auto; display: flex; flex-direction: column; gap: 18px; }
+.flujo { list-style: none; padding: 0; margin: 0; counter-reset: paso; display: flex; flex-direction: column; gap: 14px; }
+.flujo li { counter-increment: paso; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; }
+.flujo li::before {
+  content: counter(paso);
+  grid-row: span 2;
+  width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 2px solid var(--primary); color: var(--primary);
+  font-family: var(--font-mono); font-weight: 700; font-size: 14px;
+}
+.flujo h3 { font-size: 17px; font-weight: 700; padding-top: 5px; }
+.flujo p { color: var(--muted); font-size: 14.5px; max-width: 62ch; }
+.limites > summary { cursor: pointer; font-weight: 700; font-size: 16px; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.limites > summary::-webkit-details-marker { display: none; }
+.limites > summary::after { content: "+"; font-family: var(--font-mono); color: var(--muted); }
+.limites[open] > summary::after { content: "−"; }
+.limites ul { padding-left: 18px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; }
+.panel p { max-width: 68ch; }
+
+/* ---------- Hoja y toast ---------- */
+.hoja-fondo { position: fixed; inset: 0; background: var(--scrim); z-index: 40; }
+.hoja {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 41;
+  max-width: 520px; margin-inline: auto;
+  background: var(--surface); color: var(--ink);
+  border-radius: 18px 18px 0 0;
+  padding: 22px 20px calc(22px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -10px 34px rgba(0, 0, 0, .22);
+  display: flex; flex-direction: column; gap: 12px;
+  animation: subir 240ms ease-out both;
+}
+@keyframes subir { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.hoja h2 { font-size: 23px; font-weight: 800; letter-spacing: -0.015em; }
+.hoja-eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.guardamos { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.guardamos ul { padding-left: 18px; }
+.g-lbl { font-weight: 700; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  z-index: 50; max-width: calc(100% - 32px);
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; box-shadow: var(--shadow);
+}
+.ico { display: inline-block; flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+<style>
+input[type="email"], input[type="password"] {
+  width: 100%; min-height: 44px; padding: 9px 12px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface-2); color: var(--ink); font-size: 16px;
+}
+input[type="email"]:focus, input[type="password"]:focus { border-color: var(--primary); }
+.login { display: flex; flex-direction: column; gap: 16px; max-width: 460px; margin-inline: auto; }
+.cab-panel { flex-direction: row; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+#sel-local { width: auto; }
+.vacio-tarjeta { align-items: center; text-align: center; padding: 32px 20px; }
+.vacio-ico { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); color: var(--primary); }
+.vacio-ico .ico { width: 24px; height: 24px; }
+.sticker { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--grid); }
+</style>
+</head>
+<body>
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="tinta-0" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="borde"/>
+      <feColorMatrix in="ruido" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.7" result="poros"/>
+      <feComposite in="borde" in2="poros" operator="in"/>
+    </filter>
+    <filter id="tinta-1" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="11" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.2" xChannelSelector="G" yChannelSelector="R" result="borde"/>
+      <feColorMatrix in="ruido" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.72" result="poros"/>
+      <feComposite in="borde" in2="poros" operator="in"/>
+    </filter>
+    <filter id="tinta-2" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="23" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.6" xChannelSelector="R" yChannelSelector="B" result="borde"/>
+      <feColorMatrix in="ruido" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.68" result="poros"/>
+      <feComposite in="borde" in2="poros" operator="in"/>
+    </filter>
+    <path id="arco-sup" d="M 13.5 50 A 36.5 36.5 0 0 1 86.5 50"/>
+    <path id="arco-inf" d="M 9.5 50 A 40.5 40.5 0 0 0 90.5 50"/>
+  </defs>
+</svg>
+
+<header class="barra">
+  <div class="barra-fila">
+    <p class="marca">Sellos <span class="etiqueta">Beta</span></p>
+    <p class="modo" id="modo" data-estado="cargando"><span class="punto" aria-hidden="true"></span><span id="modo-txt">Conectando…</span></p>
+  </div>
+  <nav class="pestanas" role="tablist" aria-label="Vistas">
+    <button type="button" role="tab" id="tab-tarjeta" aria-controls="v-tarjeta" aria-selected="true" data-tab="tarjeta">Mi tarjeta</button>
+    <button type="button" role="tab" id="tab-local" aria-controls="v-local" aria-selected="false" tabindex="-1" data-tab="local">Local</button>
+  </nav>
+</header>
+
+<main class="principal">
+  <section id="v-tarjeta" class="vista vista-tarjeta" role="tabpanel" aria-labelledby="tab-tarjeta">
+    <div id="aviso" aria-live="polite"></div>
+    <div id="tarjeta"></div>
+    <div id="acciones" class="acciones"></div>
+    <details class="datos" id="mis-datos">
+      <summary>Qué guardamos de ti</summary>
+      <div class="datos-cuerpo">
+        <div id="datos-contenido" class="datos-cuerpo" style="padding-bottom:0"></div>
+        <form id="f-recuperar" class="recuperar" autocomplete="off" novalidate>
+          <label for="in-recuperar">¿Cambiaste de teléfono? Recupera tu tarjeta con su llave</label>
+          <div class="fila">
+            <input id="in-recuperar" name="llave" type="text" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX" maxlength="16">
+            <button type="submit" class="btn">Recuperar</button>
+          </div>
+          <p id="recuperar-msg" class="msg" role="status"></p>
+        </form>
+      </div>
+    </details>
+  </section>
+
+  <section id="v-local" class="vista vista-local" role="tabpanel" aria-labelledby="tab-local" hidden>
+    <div id="local-login" class="login" hidden>
+      <div class="cab-vista">
+        <h2 class="titulo-vista">Acceso del local</h2>
+        <p class="sub">Para quien atiende: valida canjes y mira cómo va el programa.</p>
+      </div>
+      <form id="f-login" class="panel form-config" autocomplete="on" novalidate>
+        <div class="campo">
+          <label for="in-correo">Correo</label>
+          <input id="in-correo" name="correo" type="email" autocomplete="username" inputmode="email" spellcheck="false">
+        </div>
+        <div class="campo">
+          <label for="in-clave">Contraseña</label>
+          <input id="in-clave" name="clave" type="password" autocomplete="current-password">
+        </div>
+        <div class="fila-acciones">
+          <button type="submit" class="btn primario">Entrar</button>
+          <p id="login-msg" class="msg" role="status"></p>
+        </div>
+      </form>
+    </div>
+
+    <div id="local-panel" class="vista-local" hidden>
+      <div class="cab-vista cab-panel">
+        <div>
+          <h2 class="titulo-vista" id="panel-titulo">Panel del local</h2>
+          <p class="sub" id="panel-sub">Lo que ve quien atiende</p>
+        </div>
+        <div class="fila-botones">
+          <select id="sel-local" aria-label="Local" hidden></select>
+          <button type="button" class="btn" data-accion="salir">Cerrar sesión</button>
+        </div>
+      </div>
+      <div id="kpis" class="kpis"></div>
+      <div id="avisos-local" class="avisos-local"></div>
+      <div class="rejilla">
+        <section class="panel" aria-labelledby="h-canje">
+          <h3 id="h-canje">Validar canje</h3>
+          <form id="f-canje" autocomplete="off" novalidate>
+            <div class="campo">
+              <label for="in-canje">Código de 4 dígitos que muestra el cliente</label>
+              <div class="fila">
+                <input id="in-canje" name="codigo" type="text" inputmode="numeric" maxlength="4" placeholder="0000" class="in-codigo">
+                <button type="submit" class="btn primario">Validar</button>
+              </div>
+            </div>
+            <p id="canje-msg" class="msg" role="status"></p>
+          </form>
+          <p class="nota" id="canje-pendientes"></p>
+        </section>
+
+        <section class="panel" aria-labelledby="h-feed">
+          <h3 id="h-feed">Actividad de hoy</h3>
+          <div id="feed"></div>
+        </section>
+
+        <section class="panel panel-ancho" aria-labelledby="h-grafico">
+          <h3 id="h-grafico">Sellos por hora del día</h3>
+          <p class="nota">Últimos 30 días, todas las tarjetas sumadas.</p>
+          <div id="grafico" class="grafico"></div>
+          <details class="tabla-vista">
+            <summary>Ver como tabla</summary>
+            <div class="tabla-scroll" id="grafico-tabla"></div>
+          </details>
+        </section>
+
+        <section class="panel" aria-labelledby="h-lista">
+          <h3 id="h-lista">Tarjetas</h3>
+          <div id="lista"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="h-config" id="panel-config">
+          <h3 id="h-config">Programa</h3>
+          <form id="f-config" class="form-config" autocomplete="off" novalidate>
+            <div class="campo">
+              <label for="cfg-nombre">Nombre del local</label>
+              <input id="cfg-nombre" name="nombre" type="text" maxlength="40">
+            </div>
+            <fieldset class="campo">
+              <legend>Sellos para el premio</legend>
+              <div class="segmentado">
+                <input type="radio" name="sellos" id="cfg-s6" value="6"><label for="cfg-s6">6</label>
+                <input type="radio" name="sellos" id="cfg-s8" value="8"><label for="cfg-s8">8</label>
+                <input type="radio" name="sellos" id="cfg-s10" value="10"><label for="cfg-s10">10</label>
+                <input type="radio" name="sellos" id="cfg-s12" value="12"><label for="cfg-s12">12</label>
+              </div>
+            </fieldset>
+            <div class="campo">
+              <label for="cfg-premio">Premio</label>
+              <input id="cfg-premio" name="premio" type="text" maxlength="40">
+            </div>
+            <div class="campo">
+              <label for="cfg-espera">Espera entre sellos</label>
+              <select id="cfg-espera" name="espera">
+                <option value="30">30 segundos (prueba)</option>
+                <option value="3600">1 hora</option>
+                <option value="14400">4 horas</option>
+                <option value="86400">1 día</option>
+              </select>
+              <p class="ayuda">Evita que alguien sume varios sellos en una misma visita.</p>
+            </div>
+            <fieldset class="campo">
+              <legend>Tinta del sello</legend>
+              <div class="tintas">
+                <input type="radio" name="tinta" id="cfg-t-violeta" value="violeta"><label for="cfg-t-violeta"><i style="--c:#5B3F95"></i>Violeta timbre</label>
+                <input type="radio" name="tinta" id="cfg-t-azul" value="azul"><label for="cfg-t-azul"><i style="--c:#1F4E9C"></i>Azul</label>
+                <input type="radio" name="tinta" id="cfg-t-rojo" value="rojo"><label for="cfg-t-rojo"><i style="--c:#A8322D"></i>Rojo</label>
+                <input type="radio" name="tinta" id="cfg-t-petroleo" value="petroleo"><label for="cfg-t-petroleo"><i style="--c:#1D4650"></i>Petróleo</label>
+              </div>
+            </fieldset>
+            <div class="fila-acciones">
+              <button type="submit" class="btn primario">Guardar cambios</button>
+              <p id="config-msg" class="msg" role="status"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel" aria-labelledby="h-stickers">
+          <h3 id="h-stickers">Stickers del local</h3>
+          <div id="stickers" class="acciones"></div>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="hoja-fondo" class="hoja-fondo" hidden></div>
+<div id="hoja" class="hoja" role="dialog" aria-modal="true" aria-labelledby="hoja-titulo" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script>
+(() => {
+  'use strict';
+
+  /* ================= Configuración: pega aquí los datos de tu proyecto =================
+     Supabase → Project Settings → API Keys.
+     La clave publicable (sb_publishable_…) o la anon están hechas para ir en la página.
+     NUNCA pegues aquí la secreta (sb_secret_…) ni la service_role. */
+  const SUPABASE_URL = 'https://zqsfhmixvwlqsikywzqs.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_AU4nomvnsS96DuPto1bRpQ_ehyR8Qu7';
+
+  /* ================= Constantes ================= */
+  const MIN = 60e3, DIA = 864e5;
+  const COLUMNAS = { 6: 3, 8: 4, 10: 5, 12: 4 };
+  const TINTAS = { violeta: '#5B3F95', azul: '#1F4E9C', rojo: '#A8322D', petroleo: '#1D4650' };
+  const LS = 'sellos:v2';
+  const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+  const MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+  /* ================= Utilidades ================= */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+  const normalizar = (s) => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '').replace(/O/g, '0').replace(/[IL]/g, '1');
+  const formatoLlave = (s) => s && s.length === 12 ? `${s.slice(0, 4)}-${s.slice(4, 8)}-${s.slice(8)}` : String(s || '');
+  const ms = (iso) => (iso ? Date.parse(iso) : 0);
+
+  const fmtFH = (() => { try { return new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return null; } })();
+  const fmtF = (() => { try { return new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return null; } })();
+  const fmtFechaHora = (t) => fmtFH ? fmtFH.format(new Date(t)) : new Date(t).toLocaleString();
+  const fmtFecha = (t) => fmtF ? fmtF.format(new Date(t)) : new Date(t).toLocaleDateString();
+  const fmtNum = (n) => { try { return new Intl.NumberFormat('es-CL').format(n); } catch (e) { return String(n); } };
+  function fmtDuracion(m) {
+    const s = Math.max(1, Math.ceil(m / 1000));
+    if (s < 60) return `${s} s`;
+    const mi = Math.ceil(s / 60);
+    if (mi < 60) return `${mi} min`;
+    const h = Math.floor(mi / 60), rm = mi % 60;
+    if (h < 24) return rm ? `${h} h ${rm} min` : `${h} h`;
+    const d = Math.floor(h / 24), rh = h % 24;
+    return rh ? `${d} d ${rh} h` : `${d} d`;
+  }
+  function fmtMMSS(m) {
+    const s = Math.max(0, Math.ceil(m / 1000));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }
+  function fmtHace(t, ahora) {
+    const s = Math.round((ahora - t) / 1000);
+    if (s < 45) return 'recién';
+    const m = Math.round(s / 60);
+    if (m < 60) return `hace ${m} min`;
+    return `hace ${Math.round(m / 60)} h`;
+  }
+  function diaRelativo(fechaYmd) {
+    // fechaYmd viene del servidor como AAAA-MM-DD en la hora del local
+    const [y, mo, d] = fechaYmd.split('-').map(Number);
+    const f = new Date(y, mo - 1, d);
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const dif = Math.round((hoy - f) / DIA);
+    if (dif <= 0) return 'hoy';
+    if (dif === 1) return 'ayer';
+    if (dif < 31) return `hace ${dif} días`;
+    return fmtFecha(f);
+  }
+  const faltanTxt = (n) => n === 1 ? 'te falta 1' : `te faltan ${n}`;
+  const Mayus = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const ICONOS = {
+    nfc: '<path d="M6.5 8.5a5 5 0 0 1 0 7"/><path d="M10 6a8.5 8.5 0 0 1 0 12"/><path d="M13.5 3.5a12 12 0 0 1 0 17"/>',
+    check: '<path d="M5 12.5l4.2 4.2L19 7"/>',
+    reloj: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    alerta: '<path d="M10.3 4.3 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4.5M12 17.2v.3"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.3"/>',
+    sello: '<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3"/>',
+    bloq: '<circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/>',
+    canje: '<path d="M4 10.5h16V20H4z"/><path d="M12 10.5V20M3 7h18v3.5H3z"/><path d="M12 7C10.5 4 7 4 7 6s3.5 1 5 1zm0 0c1.5-3 5-3 5-1s-3.5 1-5 1z"/>',
+  };
+  const icono = (n) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONOS[n] || ''}</svg>`;
+
+  /* ================= Lo que guarda este teléfono =================
+     { tarjetas: { [idLocal]: { secreto, pieza } }, piezas: { [pieza]: idLocal }, ultimo: idLocal }
+     La llave (secreto) es lo único que identifica la tarjeta. El servidor solo guarda su hash. */
+  let almacenOk = true;
+  function leer() {
+    try { const d = JSON.parse(localStorage.getItem(LS)); return d && typeof d === 'object' ? d : {}; }
+    catch (e) { return {}; }
+  }
+  function escribir(d) {
+    try { localStorage.setItem(LS, JSON.stringify(d)); almacenOk = true; }
+    catch (e) { almacenOk = false; }
+  }
+  function recordarPieza(pieza, idLocal) {
+    if (!pieza || !idLocal) return;
+    const d = leer(); d.piezas = d.piezas || {}; d.piezas[pieza] = idLocal; escribir(d);
+  }
+  function recordarTarjeta(idLocal, pieza, secreto) {
+    const d = leer();
+    d.tarjetas = d.tarjetas || {};
+    d.tarjetas[idLocal] = { secreto, pieza: pieza || (d.tarjetas[idLocal] && d.tarjetas[idLocal].pieza) || null };
+    if (pieza) { d.piezas = d.piezas || {}; d.piezas[pieza] = idLocal; }
+    d.ultimo = idLocal;
+    escribir(d);
+  }
+  function olvidarTarjeta(idLocal) {
+    const d = leer();
+    if (d.tarjetas) delete d.tarjetas[idLocal];
+    if (d.ultimo === idLocal) delete d.ultimo;
+    escribir(d);
+  }
+  function secretoDe(idLocal) {
+    const d = leer();
+    return (idLocal && d.tarjetas && d.tarjetas[idLocal] && d.tarjetas[idLocal].secreto) || null;
+  }
+
+  /* ================= Estado ================= */
+  const estado = {
+    vista: 'tarjeta',
+    red: 'cargando',        // cargando | ok | error | sin-config
+    pieza: null,
+    local: null,
+    tarjeta: null,
+    desfase: 0,             // hora del servidor − hora de este teléfono (ms)
+    aviso: null,
+    recien: null,
+    confirmando: null,
+    verLlave: false,
+    toquePendiente: false,
+    // local
+    sesion: null,
+    locales: [],
+    idPanel: null,
+    panel: null,
+    configSucia: false,
+  };
+  const ahoraServidor = () => Date.now() + estado.desfase;
+  const aLocal = (iso) => ms(iso) - estado.desfase;   // hora del servidor → reloj de este teléfono
+
+  /* ================= Conexión con Supabase ================= */
+  let sb = null;
+  const configurado = () => /^https:\/\//.test(SUPABASE_URL) && !/PEGA_AQUI/.test(SUPABASE_KEY);
+
+  async function rpc(nombre, args) {
+    const { data, error } = await sb.rpc(nombre, args || {});
+    if (error) {
+      const e = new Error(error.message || 'error');
+      e.code = error.code;
+      e.motivo = String(error.message || '').trim();
+      throw e;
+    }
+    estado.red = 'ok';
+    return data;
+  }
+  function aplicar(r) {
+    if (!r) return;
+    if (r.ahora) estado.desfase = ms(r.ahora) - Date.now();
+    if (r.local) estado.local = r.local;
+    if (Object.prototype.hasOwnProperty.call(r, 'tarjeta')) estado.tarjeta = r.tarjeta;
+  }
+  function mensajeError(e) {
+    const mapa = {
+      pieza_invalida: 'Este sticker no está activo. Avísale al local.',
+      tarjeta_invalida: 'No encontramos tu tarjeta. Puede que se haya borrado.',
+      limite_tarjetas: 'Hay muchas tarjetas nuevas en este momento. Intenta en unos minutos.',
+      faltan_sellos: 'Todavía no completas la tarjeta.',
+      config_invalida: 'Revisa los valores del programa.',
+      no_autorizado: 'Tu usuario no tiene acceso a este local.',
+    };
+    if (e && mapa[e.motivo]) return mapa[e.motivo];
+    if (e && e.code === '42501') return mapa.no_autorizado;
+    if (e && /fetch|network|load failed|conexi/i.test(String(e.message || ''))) {
+      estado.red = 'error';
+      return 'Sin conexión. Revisa tu internet e intenta de nuevo.';
+    }
+    return 'Algo falló. Intenta de nuevo.';
+  }
+
+  /* ================= Tarjeta del cliente ================= */
+  // Carga el estado sin sellar. Resuelve de qué local es el sticker y si este teléfono ya tiene tarjeta ahí.
+  async function cargarTarjeta(pieza) {
+    const d = leer();
+    let idLocal = pieza ? (d.piezas && d.piezas[pieza]) : d.ultimo;
+    let secreto = secretoDe(idLocal);
+    let r = await rpc('tarjeta_estado', { p_pieza: pieza || null, p_secreto: secreto });
+    idLocal = r.local && r.local.id;
+    if (pieza) recordarPieza(pieza, idLocal);
+    if (!secreto && secretoDe(idLocal)) {
+      secreto = secretoDe(idLocal);
+      r = await rpc('tarjeta_estado', { p_pieza: pieza || null, p_secreto: secreto });
+    }
+    if (secreto && !r.tarjeta) olvidarTarjeta(idLocal);   // la llave ya no existe en el servidor
+    aplicar(r);
+    return r;
+  }
+
+  // Toque real en el atril (?s=PIEZA).
+  async function tocar(pieza) {
+    estado.toquePendiente = true;
+    render();
+    try {
+      const d = leer();
+      const idLocal = d.piezas && d.piezas[pieza];
+      const secreto = secretoDe(idLocal);
+      if (secreto) {
+        try { await sellarCon(pieza, secreto); return; }
+        catch (e) {
+          if (e.motivo !== 'tarjeta_invalida') throw e;
+          olvidarTarjeta(idLocal);
+        }
+      }
+      await cargarTarjeta(pieza);
+      if (!estado.tarjeta) abrirAlta();
+      else await sellarCon(pieza, secretoDe(estado.local.id));
+    } catch (e) {
+      mostrarAviso('error', 'No se registró el toque', mensajeError(e));
+    } finally {
+      estado.toquePendiente = false;
+      render();
+    }
+  }
+
+  async function sellarCon(pieza, secreto) {
+    const r = await rpc('sellar', { p_pieza: pieza, p_secreto: secreto });
+    aplicar(r);
+    recordarTarjeta(r.local.id, pieza, secreto);
+    const N = r.local.sellos_premio;
+    const tiene = r.tarjeta ? r.tarjeta.ciclo.length : 0;
+    if (r.resultado === 'sellado') {
+      estado.recien = { t: ms(r.tarjeta.ciclo[tiene - 1]), hasta: Date.now() + 900 };
+      if (tiene >= N) mostrarAviso('ok', '¡Completaste la tarjeta!', `Canjea tu ${r.local.premio} cuando quieras.`);
+      else mostrarAviso('ok', 'Sello agregado', `Llevas ${tiene} de ${N}: ${faltanTxt(N - tiene)} para tu ${r.local.premio}.`);
+    } else if (r.resultado === 'bloqueado') {
+      mostrarAviso('espera', 'Este toque no suma', `Ya tienes el sello de esta visita. El próximo se puede en ${fmtDuracion((r.espera_seg || 1) * 1000)}.`);
+    } else if (r.resultado === 'completa') {
+      mostrarAviso('info', 'Tu tarjeta está completa', `Canjea tu ${r.local.premio} antes de juntar más sellos.`);
+    }
+  }
+
+  let ocupado = false;
+  async function conBloqueo(fn) {
+    if (ocupado) return;
+    ocupado = true;
+    try { await fn(); } finally { ocupado = false; render(); }
+  }
+
+  const crearTarjeta = () => conBloqueo(async () => {
+    cerrarHoja();
+    try {
+      const r = await rpc('crear_tarjeta', { p_pieza: estado.pieza });
+      aplicar(r);
+      recordarTarjeta(r.local.id, estado.pieza, r.secreto);
+      estado.recien = { t: ms(r.tarjeta.ciclo[0]), hasta: Date.now() + 900 };
+      if (!almacenOk) {
+        mostrarAviso('espera', 'Guarda tu llave', `Este navegador no guarda datos. Anota la llave ${formatoLlave(r.secreto)} para no perder la tarjeta.`);
+      } else {
+        mostrarAviso('ok', 'Tarjeta creada con tu primer sello', `${Mayus(faltanTxt(r.local.sellos_premio - 1))} para tu ${r.local.premio}.`);
+      }
+    } catch (e) {
+      mostrarAviso('error', 'No se creó la tarjeta', mensajeError(e));
+    }
+  });
+
+  const simularToque = () => conBloqueo(async () => {
+    const secreto = secretoDe(estado.local && estado.local.id);
+    if (!secreto || !estado.pieza) return;
+    try { await sellarCon(estado.pieza, secreto); }
+    catch (e) { mostrarAviso('error', 'No se registró el toque', mensajeError(e)); }
+  });
+
+  const pedirCanje = () => conBloqueo(async () => {
+    try {
+      aplicar(await rpc('pedir_canje', { p_secreto: secretoDe(estado.local.id) }));
+      estado.aviso = null;
+      vigilarCanje();
+    } catch (e) { mostrarAviso('error', 'No se generó el código', mensajeError(e)); }
+  });
+
+  const cancelarCanje = () => conBloqueo(async () => {
+    try {
+      aplicar(await rpc('cancelar_canje', { p_secreto: secretoDe(estado.local.id) }));
+      mostrarAviso('info', 'Canje cancelado', 'Tus sellos siguen en la tarjeta.');
+    } catch (e) { mostrarAviso('error', 'No se canceló el canje', mensajeError(e)); }
+  });
+
+  // Mientras hay un código a la vista, revisa cada 4 s si quien atiende ya lo validó.
+  let vigilando = false;
+  async function vigilarCanje() {
+    if (vigilando) return;
+    vigilando = true;
+    try {
+      while (estado.tarjeta && estado.tarjeta.canje && aLocal(estado.tarjeta.canje.expira) > Date.now()) {
+        await dormir(4000);
+        if (document.hidden) continue;
+        const antes = estado.tarjeta ? estado.tarjeta.canjeados : 0;
+        try {
+          aplicar(await rpc('tarjeta_estado', { p_pieza: estado.pieza, p_secreto: secretoDe(estado.local.id) }));
+        } catch (e) { continue; }
+        if (estado.tarjeta && estado.tarjeta.canjeados > antes) {
+          mostrarAviso('ok', 'Canje validado', `Disfruta tu ${estado.local.premio}. Tu tarjeta vuelve a empezar.`);
+        }
+        render();
+      }
+    } finally {
+      vigilando = false;
+      render();
+    }
+  }
+
+  const borrarTarjeta = () => conBloqueo(async () => {
+    estado.confirmando = null;
+    try {
+      await rpc('borrar_tarjeta', { p_secreto: secretoDe(estado.local.id) });
+      olvidarTarjeta(estado.local.id);
+      estado.tarjeta = null;
+      mostrarAviso('info', 'Tarjeta borrada', 'Borramos tu tarjeta y todo su historial. Si vuelves a tocar el atril, empiezas una nueva.');
+    } catch (e) { mostrarAviso('error', 'No se pudo borrar', mensajeError(e)); }
+  });
+
+  async function recuperar(texto) {
+    const msg = $('#recuperar-msg');
+    const llave = normalizar(texto);
+    if (llave.length !== 12) return ponerMsg(msg, 'error', 'La llave tiene 12 caracteres, por ejemplo K7Q4-XM2P-8D3F.');
+    try {
+      const r = await rpc('tarjeta_estado', { p_pieza: null, p_secreto: llave });
+      if (!r.tarjeta) return ponerMsg(msg, 'error', 'No encontramos una tarjeta con esa llave.');
+      aplicar(r);
+      // Si este teléfono ya conoce un sticker de ese local, lo reutiliza para el modo prueba.
+      const piezas = leer().piezas || {};
+      const pieza = Object.keys(piezas).find((p) => piezas[p] === r.local.id) || null;
+      recordarTarjeta(r.local.id, pieza, llave);
+      estado.pieza = pieza;
+      $('#in-recuperar').value = '';
+      ponerMsg(msg, 'ok', `Listo, recuperaste tu tarjeta de ${r.local.nombre}.`);
+      render();
+    } catch (e) {
+      if (e.motivo === 'pieza_invalida') return ponerMsg(msg, 'error', 'No encontramos una tarjeta con esa llave.');
+      ponerMsg(msg, 'error', mensajeError(e));
+    }
+  }
+
+  /* ================= Panel del local ================= */
+  async function cargarPanel() {
+    if (!sb) return;
+    if (!estado.sesion) { estado.panel = null; render(); return; }
+    try {
+      if (!estado.locales.length) estado.locales = await rpc('mis_locales', {});
+      if (!estado.idPanel || !estado.locales.some((l) => l.id === estado.idPanel)) {
+        estado.idPanel = estado.locales[0] ? estado.locales[0].id : null;
+      }
+      if (estado.idPanel) {
+        const p = await rpc('panel', { p_local: estado.idPanel });
+        if (p && p.ahora) estado.desfase = ms(p.ahora) - Date.now();
+        estado.panel = p;
+      } else {
+        estado.panel = null;
+      }
+    } catch (e) {
+      mostrarToast(mensajeError(e));
+    }
+    render();
+  }
+
+  async function entrar(form) {
+    const msg = $('#login-msg');
+    const correo = form.correo.value.trim(), clave = form.clave.value;
+    if (!correo || !clave) return ponerMsg(msg, 'error', 'Escribe tu correo y tu contraseña.');
+    ponerMsg(msg, '', 'Entrando…');
+    const { error } = await sb.auth.signInWithPassword({ email: correo, password: clave });
+    if (error) return ponerMsg(msg, 'error', /invalid/i.test(error.message) ? 'Correo o contraseña incorrectos.' : 'No se pudo entrar. Intenta de nuevo.');
+    form.clave.value = '';
+    ponerMsg(msg, '', '');
+  }
+
+  async function salir() {
+    await sb.auth.signOut();
+    estado.locales = [];
+    estado.panel = null;
+    estado.idPanel = null;
+    render();
+  }
+
+  async function validarCanje(texto) {
+    const msg = $('#canje-msg');
+    const cod = String(texto || '').replace(/\D/g, '');
+    if (cod.length !== 4) return ponerMsg(msg, 'error', 'Escribe los 4 dígitos que muestra el cliente.');
+    try {
+      const r = await rpc('validar_canje', { p_local: estado.idPanel, p_codigo: cod });
+      if (r.ok) {
+        ponerMsg(msg, 'ok', `Canje validado: ${r.premio} para la tarjeta ${r.ref}.`);
+        $('#in-canje').value = '';
+        cargarPanel();
+      } else {
+        const m = { no_existe: 'No hay un canje pendiente con ese código.', vencido: 'Ese código venció. Pídele al cliente que genere uno nuevo.', sin_sellos: 'Esa tarjeta ya no tiene los sellos para el premio.' };
+        ponerMsg(msg, 'error', m[r.motivo] || 'No se pudo validar.');
+      }
+    } catch (e) { ponerMsg(msg, 'error', mensajeError(e)); }
+  }
+
+  async function guardarConfig(form) {
+    const msg = $('#config-msg');
+    try {
+      const r = await rpc('guardar_config', {
+        p_local: estado.idPanel,
+        p_config: {
+          nombre: form.nombre.value,
+          premio: form.premio.value,
+          sellos_premio: Number(form.sellos.value),
+          espera_seg: Number(form.espera.value),
+          tinta: form.tinta.value,
+        },
+      });
+      estado.configSucia = false;
+      if (estado.panel) estado.panel.local = r.local;
+      ponerMsg(msg, 'ok', 'Guardado.');
+      cargarPanel();
+    } catch (e) { ponerMsg(msg, 'error', mensajeError(e)); }
+  }
+
+  function copiar(texto, boton) {
+    const fallback = () => {
+      const el = boton && boton.parentElement && boton.parentElement.querySelector('.codigo-url, .mono');
+      if (el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+      mostrarToast('Quedó seleccionado: cópialo a mano');
+    };
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
+      navigator.clipboard.writeText(texto).then(() => mostrarToast('Copiado'), fallback);
+    } catch (e) { fallback(); }
+  }
+
+  /* ================= Avisos, hoja y toast ================= */
+  let tAviso = null;
+  function mostrarAviso(tipo, titulo, texto) {
+    const a = { tipo, titulo, texto: texto || '' };
+    estado.aviso = a;
+    clearTimeout(tAviso);
+    tAviso = setTimeout(() => { if (estado.aviso === a) { estado.aviso = null; render(); } }, 14000);
+    render();
+  }
+  let tToast = null;
+  function mostrarToast(texto) {
+    const t = $('#toast');
+    t.textContent = texto; t.hidden = false;
+    clearTimeout(tToast);
+    tToast = setTimeout(() => { t.hidden = true; }, 2800);
+  }
+  function ponerMsg(el, tipo, texto) {
+    if (!el) return;
+    el.className = `msg ${tipo}`;
+    el.textContent = texto;
+  }
+
+  let focoPrevio = null;
+  function abrirAlta() {
+    const l = estado.local;
+    if (!l) return;
+    focoPrevio = document.activeElement;
+    $('#hoja').innerHTML = `
+      <p class="hoja-eyebrow">${esc(l.nombre)}</p>
+      <h2 id="hoja-titulo">Crea tu tarjeta de sellos</h2>
+      <p>Junta ${l.sellos_premio} sellos y te llevas <strong>${esc(l.premio)}</strong>. Este toque ya cuenta como el primero.</p>
+      <div class="guardamos">
+        <p class="g-lbl">Para tu tarjeta guardamos solo</p>
+        <ul><li>Un código de tarjeta, sin tu nombre</li><li>La fecha y hora de cada sello</li></ul>
+        <p class="nota">Sin correo, teléfono ni ubicación. Puedes verlo y borrarlo en “Qué guardamos de ti”. Se borra solo si pasas un año sin venir.</p>
+      </div>
+      <div class="fila-botones">
+        <button type="button" class="btn primario" data-accion="crear">Crear tarjeta y sellar</button>
+        <button type="button" class="btn" data-accion="cerrar-hoja">Ahora no</button>
+      </div>`;
+    $('#hoja').hidden = false;
+    $('#hoja-fondo').hidden = false;
+    const b = $('#hoja [data-accion="crear"]');
+    if (b) b.focus();
+  }
+  function cerrarHoja() {
+    if ($('#hoja').hidden) return;
+    $('#hoja').hidden = true;
+    $('#hoja-fondo').hidden = true;
+    if (focoPrevio && document.contains(focoPrevio)) { try { focoPrevio.focus(); } catch (e) { /* nada */ } }
+  }
+
+  let bloqueo = null, bloqueoPara = null;
+  async function pantallaEncendida(clave) {
+    if (clave && clave !== bloqueoPara) {
+      bloqueoPara = clave;
+      if ('wakeLock' in navigator && document.visibilityState === 'visible') {
+        try { bloqueo = await navigator.wakeLock.request('screen'); bloqueo.addEventListener('release', () => { bloqueo = null; }); }
+        catch (e) { bloqueo = null; }
+      }
+    } else if (!clave && bloqueoPara) {
+      bloqueoPara = null;
+      if (bloqueo) { try { await bloqueo.release(); } catch (e) { /* nada */ } bloqueo = null; }
+    }
+  }
+
+  /* ================= Render ================= */
+  const pintado = new WeakMap();
+  function pintar(el, html) {
+    if (!el || pintado.get(el) === html) return;
+    pintado.set(el, html);
+    el.innerHTML = html;
+  }
+
+  function render() {
+    renderModo();
+    if (estado.vista === 'tarjeta') renderTarjeta();
+    else renderLocal();
+  }
+
+  function renderModo() {
+    const el = $('#modo');
+    el.dataset.estado = estado.red === 'ok' ? 'db' : estado.red === 'error' || estado.red === 'sin-config' ? 'error' : 'cargando';
+    $('#modo-txt').textContent =
+      estado.red === 'ok' ? 'En línea'
+      : estado.red === 'error' ? 'Sin conexión'
+      : estado.red === 'sin-config' ? 'Falta configurar'
+      : 'Conectando…';
+  }
+
+  function htmlAviso(a, cerrable = true) {
+    const ic = { ok: 'check', espera: 'reloj', error: 'alerta', info: 'info' }[a.tipo] || 'info';
+    return `<div class="aviso ${esc(a.tipo)}">${icono(ic)}<div><strong>${esc(a.titulo)}</strong>${a.texto ? `<span>${esc(a.texto)}</span>` : ''}</div>${cerrable ? '<button type="button" class="aviso-x" data-accion="cerrar-aviso" aria-label="Cerrar aviso">×</button>' : '<span></span>'}</div>`;
+  }
+
+  function svgSello(t, nombre, nuevo) {
+    const d = new Date(t);
+    const giro = (Math.floor(t / 1000) % 17) - 8;
+    const dx = (Math.floor(t / 7000) % 5) - 2;
+    const dy = (Math.floor(t / 11000) % 5) - 2;
+    const filtro = `tinta-${Math.floor(t / 3000) % 3}`;
+    const hora = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')} H`;
+    return `<svg class="sello${nuevo ? ' nuevo' : ''}" viewBox="0 0 100 100" style="--giro:${giro}deg;--dx:${dx}%;--dy:${dy}%" role="img" aria-label="Sello del ${d.getDate()} de ${MESES_LARGOS[d.getMonth()]}">
+      <g filter="url(#${filtro})">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4"/>
+        <circle cx="50" cy="50" r="30.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <text class="s-arco"><textPath href="#arco-sup" startOffset="50%" text-anchor="middle">${esc(nombre.toUpperCase().slice(0, 18))}</textPath></text>
+        <text class="s-arco"><textPath href="#arco-inf" startOffset="50%" text-anchor="middle">${hora}</textPath></text>
+        <text class="s-dia" x="50" y="52" text-anchor="middle">${d.getDate()}</text>
+        <text class="s-mes" x="50" y="66" text-anchor="middle">${MESES[d.getMonth()]}</text>
+      </g>
+    </svg>`;
+  }
+
+  function htmlTarjeta() {
+    const l = estado.local, t = estado.tarjeta;
+    if (!l) {
+      if (estado.red === 'sin-config') {
+        return `<div class="panel"><h3>Falta configurar la conexión</h3><p class="nota">Edita el archivo y pega la URL del proyecto y la clave publicable de Supabase en <span class="mono">SUPABASE_URL</span> y <span class="mono">SUPABASE_KEY</span>.</p></div>`;
+      }
+      return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('nfc')}</span><h3>Acerca tu teléfono al atril</h3><p class="nota">Tu tarjeta de sellos aparece aquí la primera vez que tocas el sticker del local.</p></div>`;
+    }
+    const N = l.sellos_premio;
+    const ciclo = t ? t.ciclo.map(ms) : [];
+    const ahora = Date.now();
+    const vivo = estado.recien && ahora < estado.recien.hasta ? estado.recien.t : null;
+    let slots = '';
+    for (let i = 0; i < N; i++) {
+      const ts = ciclo[i];
+      const premio = i === N - 1;
+      if (ts) slots += `<div class="t-slot">${svgSello(ts, l.nombre, ts === vivo)}</div>`;
+      else slots += `<div class="t-slot${premio ? ' premio' : ''}"><span class="t-vacio">${premio ? 'PREMIO' : i + 1}</span></div>`;
+    }
+    const tiene = ciclo.length;
+    const pr = `<span class="t-premio">${esc(l.premio)}</span>`;
+    const progreso = !t ? `Junta ${N} sellos y te llevas ${pr}.`
+      : tiene >= N ? `<strong>Tarjeta completa.</strong> Canjea tu ${pr}.`
+      : `<strong>${tiene} de ${N}</strong> · ${faltanTxt(N - tiene)} para ${pr}`;
+    return `<article class="tarjeta${vivo ? ' golpe' : ''}" style="--tinta:${TINTAS[l.tinta] || TINTAS.violeta}" aria-label="Tarjeta de sellos de ${esc(l.nombre)}: ${tiene} de ${N} sellos">
+      <div class="t-cab">
+        <div><p class="t-eyebrow">Tarjeta de sellos</p><h1 class="t-nombre">${esc(l.nombre)}</h1></div>
+        <p class="t-cuenta" aria-hidden="true"><b>${tiene}</b>/${N}</p>
+      </div>
+      <div class="t-grilla" style="--cols:${COLUMNAS[N] || 4}">${slots}</div>
+      <div class="t-pie">
+        <p class="t-progreso">${progreso}</p>
+        <p class="t-codigo">${t ? `Nº ${esc(t.ref)}` : 'Sin tarjeta todavía'}</p>
+      </div>
+    </article>`;
+  }
+
+  function htmlAcciones() {
+    const l = estado.local, t = estado.tarjeta;
+    if (!l) return '';
+    const ocupadoAttr = ocupado ? ' disabled' : '';
+    if (!t) {
+      return `<button type="button" class="btn primario btn-ancho" data-accion="alta"${ocupadoAttr}>Crear mi tarjeta</button>
+        <p class="nota">La creas una vez y cada visita suma con solo acercar el teléfono al atril.</p>`;
+    }
+    const ahora = Date.now();
+    if (t.canje && aLocal(t.canje.expira) > ahora) {
+      const hasta = aLocal(t.canje.expira);
+      return `<div class="ticket">
+        <p class="tk-lbl">Código de canje</p>
+        <p class="tk-num" aria-label="Código ${t.canje.codigo.split('').join(' ')}">${esc(t.canje.codigo)}</p>
+        <p class="tk-txt">Muéstrale este código a quien te atiende para recibir tu ${esc(l.premio)}.</p>
+        <p class="tk-vence">Vence en <span data-hasta="${hasta}" data-fmt="mmss">${fmtMMSS(hasta - ahora)}</span></p>
+        <button type="button" class="btn" data-accion="cancelar-canje"${ocupadoAttr}>Cancelar canje</button>
+      </div>`;
+    }
+    if (t.ciclo.length >= l.sellos_premio) {
+      return `<button type="button" class="btn premio btn-ancho" data-accion="canjear"${ocupadoAttr}>Canjear ${esc(l.premio)}</button>
+        <p class="nota">Se genera un código de 4 dígitos que valida quien te atiende. Dura 10 minutos.</p>`;
+    }
+    const listo = t.proximo ? aLocal(t.proximo) : 0;
+    const linea = listo > ahora
+      ? `<p class="estado-linea">${icono('reloj')}<span>Próximo sello disponible en <span data-hasta="${listo}" data-fmt="dur">${fmtDuracion(listo - ahora)}</span></span></p>`
+      : `<p class="estado-linea listo">${icono('check')}<span>Listo para tu próximo sello: acerca el teléfono al atril.</span></p>`;
+    const prueba = l.espera_seg === 30 && estado.pieza
+      ? `<button type="button" class="btn btn-ancho" data-accion="simular"${ocupadoAttr}>${icono('nfc')}Simular toque (modo prueba)</button>`
+      : '';
+    return linea + prueba;
+  }
+
+  function htmlDatos() {
+    const l = estado.local, t = estado.tarjeta;
+    if (!t) {
+      return `<p class="nota">Todavía no tienes tarjeta en este teléfono. Cuando la crees, aquí verás todo lo que se guarda.</p>`;
+    }
+    const llave = secretoDe(l.id) || '';
+    const llaveTxt = estado.verLlave ? formatoLlave(llave) : `${llave.slice(0, 4)}-••••-••••`;
+    const fechas = t.sellos.map((s) => `<li>${esc(fmtFechaHora(ms(s)))}</li>`).join('');
+    const ultima = t.sellos.length ? ms(t.sellos[0]) : ms(t.creada);
+    const d = new Date(ultima);
+    const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const N = l.sellos_premio, enCiclo = t.ciclo.length;
+    const puntos = Array.from({ length: N }, (_, i) => `<i class="${i < enCiclo ? 'on' : ''}"></i>`).join('');
+    const confirmar = estado.confirmando === 'borrar'
+      ? `<div class="confirmar">
+          <p><strong>¿Borrar tu tarjeta?</strong> Pierdes tus ${enCiclo} sellos actuales y todo el historial. No se puede deshacer.</p>
+          <div class="fila-botones">
+            <button type="button" class="btn peligro" data-accion="borrar-si">Sí, borrar</button>
+            <button type="button" class="btn" data-accion="cancelar-confirmacion">Cancelar</button>
+          </div>
+        </div>`
+      : '<div><button type="button" class="btn peligro" data-accion="borrar">Borrar mi tarjeta</button></div>';
+    return `
+      <dl class="datos-lista">
+        <dt>Tarjeta</dt><dd><span class="mono">Nº ${esc(t.ref)}</span> en ${esc(l.nombre)}</dd>
+        <dt>Llave</dt>
+        <dd><span class="mono">${esc(llaveTxt)}</span>
+          <button type="button" class="btn enlace" data-accion="ver-llave">${estado.verLlave ? 'Ocultar' : 'Mostrar'}</button>
+          <button type="button" class="btn enlace" data-accion="copiar" data-texto="${esc(formatoLlave(llave))}">Copiar</button></dd>
+        <dt>Creada</dt><dd>${esc(fmtFechaHora(ms(t.creada)))}</dd>
+        <dt>Sellos</dt><dd>${t.total} en total<ul class="fechas">${fechas}</ul></dd>
+        <dt>Toques que no sumaron</dt><dd>${t.bloqueados}</dd>
+        <dt>Premios canjeados</dt><dd>${t.canjeados}</dd>
+      </dl>
+      <p class="nota">La llave es lo único que identifica tu tarjeta: con ella la recuperas en otro teléfono. No la compartas. No guardamos tu nombre, correo, teléfono ni ubicación.</p>
+      <div class="espejo">
+        <p class="espejo-lbl">Así te ve el local</p>
+        <ul class="lista"><li>
+          <div class="l-izq"><p class="l-cod">${esc(t.ref)}</p><div class="puntos" aria-label="${enCiclo} de ${N} sellos">${puntos}</div></div>
+          <div class="l-der"><p class="l-num">${enCiclo}/${N}</p><p class="l-meta">${esc(diaRelativo(ymd))}</p></div>
+        </li></ul>
+        <p class="nota">Además ve la actividad del día. De días anteriores solo ve la fecha de tu última visita y los sellos sumados por hora.</p>
+      </div>
+      ${confirmar}`;
+  }
+
+  function renderTarjeta() {
+    let aviso = '';
+    if (estado.aviso) aviso = htmlAviso(estado.aviso);
+    else if (estado.toquePendiente) aviso = htmlAviso({ tipo: 'info', titulo: 'Registrando tu toque…', texto: '' }, false);
+    pintar($('#aviso'), aviso);
+    pintar($('#tarjeta'), htmlTarjeta());
+    pintar($('#acciones'), htmlAcciones());
+    pintar($('#datos-contenido'), htmlDatos());
+    $('#mis-datos').hidden = !estado.local;
+    const c = estado.tarjeta && estado.tarjeta.canje && aLocal(estado.tarjeta.canje.expira) > Date.now() ? estado.tarjeta.canje.codigo : null;
+    pantallaEncendida(c);
+  }
+
+  /* ---------- Panel ---------- */
+  function renderLocal() {
+    const conSesion = !!estado.sesion;
+    $('#local-login').hidden = conSesion || estado.red === 'sin-config';
+    $('#local-panel').hidden = !conSesion;
+    if (!conSesion) return;
+    const p = estado.panel;
+    if (!p) {
+      pintar($('#kpis'), estado.locales.length === 0
+        ? '<div class="panel" style="grid-column:1/-1"><p class="nota">Tu usuario todavía no tiene un local asignado. Córrelo con <span class="mono">app.agregar_staff</span> en el SQL Editor.</p></div>'
+        : '');
+      return;
+    }
+    const l = p.local;
+    $('#panel-titulo').textContent = l.nombre;
+    $('#panel-sub').textContent = `Lo que ve quien atiende · ${p.rol === 'dueno' ? 'dueño' : 'caja'}`;
+    const sel = $('#sel-local');
+    sel.hidden = estado.locales.length < 2;
+    if (!sel.hidden) pintar(sel, estado.locales.map((x) => `<option value="${esc(x.id)}"${x.id === estado.idPanel ? ' selected' : ''}>${esc(x.nombre)}</option>`).join(''));
+
+    const k = p.kpis;
+    const tile = (lbl, v) => `<div class="kpi"><p class="kpi-lbl">${lbl}</p><p class="kpi-val">${fmtNum(v)}</p></div>`;
+    pintar($('#kpis'), tile('Tarjetas', k.tarjetas) + tile('Sellos en 7 días', k.sellos_7d) + tile('Premios canjeados', k.canjeados) + tile('Toques que no sumaron (30 días)', k.bloqueados_30d));
+
+    pintar($('#avisos-local'), l.espera_seg === 30
+      ? htmlAviso({ tipo: 'espera', titulo: 'Espera en modo prueba: 30 segundos', texto: 'Súbela a 4 horas en Programa antes de usarla con clientes reales.' }, false)
+      : '');
+
+    $('#canje-pendientes').textContent = p.pendientes === 0 ? 'No hay canjes esperando.' : p.pendientes === 1 ? '1 canje esperando validación.' : `${p.pendientes} canjes esperando validación.`;
+
+    const ahora = ahoraServidor();
+    const txt = { sello: 'Sello', bloqueado: 'Toque que no sumó', canje: 'Premio canjeado', pedido: 'Canje pedido' };
+    const ic = { sello: 'sello', bloqueado: 'bloq', canje: 'canje', pedido: 'reloj' };
+    const cls = { sello: 'sello', bloqueado: 'bloq', canje: 'canje', pedido: 'pedido' };
+    pintar($('#feed'), p.hoy.length
+      ? `<ul class="feed">${p.hoy.slice(0, 8).map((e) => `<li>
+          <span class="ic ${cls[e.tipo]}">${icono(ic[e.tipo])}</span>
+          <span>${txt[e.tipo] || esc(e.tipo)} · <span class="mono">${esc(e.ref)}</span></span>
+          <time datetime="${esc(e.en)}">${esc(fmtHace(ms(e.en), ahora))}</time></li>`).join('')}</ul>`
+      : '<p class="nota">Sin actividad hoy todavía.</p>');
+
+    dibujarGrafico(p.horas);
+
+    const N = l.sellos_premio;
+    pintar($('#lista'), p.tarjetas.length
+      ? `<ul class="lista">${p.tarjetas.slice(0, 20).map((t) => {
+          const puntos = Array.from({ length: N }, (_, i) => `<i class="${i < t.ciclo ? 'on' : ''}"></i>`).join('');
+          const chip = t.pendiente ? '<span class="chip pend">Canje pendiente</span>' : t.ciclo >= N ? '<span class="chip listo">Premio listo</span>' : '';
+          return `<li>
+            <div class="l-izq"><p class="l-cod">${esc(t.ref)} ${chip}</p><div class="puntos" aria-label="${t.ciclo} de ${N} sellos">${puntos}</div></div>
+            <div class="l-der"><p class="l-num">${t.ciclo}/${N}</p><p class="l-meta">${esc(diaRelativo(t.ultima_visita))}</p></div>
+          </li>`;
+        }).join('')}</ul>${p.tarjetas.length > 20 ? `<p class="nota">Y ${p.tarjetas.length - 20} tarjetas más.</p>` : ''}`
+      : '<p class="nota">Aún no hay tarjetas. La primera aparece cuando alguien toca el atril.</p>');
+
+    $('#panel-config').hidden = p.rol !== 'dueno';
+    sincronizarConfig(l);
+
+    const base = `${location.origin}${location.pathname}`;
+    pintar($('#stickers'), p.piezas.length
+      ? `${p.piezas.map((x) => {
+          const url = `${base}?s=${x.codigo}`;
+          return `<div class="sticker">
+            <p class="l-cod">${esc(x.codigo)} ${x.nota ? `<span class="chip">${esc(x.nota)}</span>` : ''} ${x.activa ? '' : '<span class="chip pend">Desactivado</span>'}</p>
+            <p class="codigo-url">${esc(url)}</p>
+            <div><button type="button" class="btn" data-accion="copiar" data-texto="${esc(url)}">Copiar link</button></div>
+          </div>`;
+        }).join('')}
+        <p class="nota">Graba ese link en el sticker con NFC Tools (Escribir → Agregar un registro → URL). No lo bloquees mientras el link no esté en tu dominio propio.</p>`
+      : '<p class="nota">Este local todavía no tiene stickers. Créalos con <span class="mono">app.nueva_pieza</span> en el SQL Editor.</p>');
+  }
+
+  function sincronizarConfig(l, forzar = false) {
+    const f = $('#f-config');
+    if (!f || (!forzar && (estado.configSucia || f.contains(document.activeElement)))) return;
+    f.nombre.value = l.nombre;
+    f.premio.value = l.premio;
+    f.espera.value = String(l.espera_seg);
+    for (const r of $$('input[name="sellos"]', f)) r.checked = Number(r.value) === l.sellos_premio;
+    for (const r of $$('input[name="tinta"]', f)) r.checked = r.value === l.tinta;
+  }
+
+  /* ---------- Gráfico: sellos por hora ---------- */
+  let firmaGrafico = '';
+  function pasoLimpio(max) {
+    const obj = max / 4;
+    const p = Math.pow(10, Math.floor(Math.log10(Math.max(obj, 1))));
+    for (const f of [1, 2, 5, 10]) if (f * p >= obj) return Math.max(1, f * p);
+    return 10 * p;
+  }
+  function dibujarGrafico(horas) {
+    const cont = $('#grafico');
+    if (!cont || estado.vista !== 'local' || !Array.isArray(horas)) return;
+    const ancho = Math.floor(cont.clientWidth);
+    if (ancho < 50) return;
+    const firma = `${horas.join(',')}|${ancho}`;
+    if (firma === firmaGrafico) return;
+    firmaGrafico = firma;
+    const total = horas.reduce((a, b) => a + b, 0);
+    if (!total) {
+      cont.innerHTML = '<p class="nota">Todavía no hay sellos en los últimos 30 días.</p>';
+      pintar($('#grafico-tabla'), '<p class="nota">Sin datos.</p>');
+      return;
+    }
+    let h0 = 8, h1 = 21;
+    horas.forEach((v, h) => { if (v) { h0 = Math.min(h0, h); h1 = Math.max(h1, h); } });
+    const datos = [];
+    for (let h = h0; h <= h1; h++) datos.push({ h, v: horas[h] });
+    const max = Math.max(...datos.map((d) => d.v));
+    const paso = pasoLimpio(max);
+    const tope = Math.max(paso, Math.ceil(max / paso) * paso);
+    const W = ancho, H = 200, m = { t: 22, r: 4, b: 26, l: 30 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const banda = iw / datos.length;
+    const bw = Math.max(4, Math.min(24, banda - 4, banda * 0.66));
+    const base = m.t + ih;
+    const yDe = (v) => base - (v / tope) * ih;
+    let grid = '';
+    for (let v = 0; v <= tope; v += paso) {
+      const y = Math.round(yDe(v)) + 0.5;
+      grid += `<line class="${v === 0 ? 'g-base' : 'g-grid'}" x1="${m.l}" x2="${W - m.r}" y1="${y}" y2="${y}"/><text class="g-eje" x="${m.l - 8}" y="${y + 4}" text-anchor="end">${v}</text>`;
+    }
+    const cada = Math.max(1, Math.ceil(38 / banda));
+    let cols = '', etq = '';
+    const geo = [];
+    let iMax = 0;
+    datos.forEach((d, i) => { if (d.v > datos[iMax].v) iMax = i; });
+    datos.forEach((d, i) => {
+      const cx = m.l + banda * i + banda / 2, x0 = cx - bw / 2;
+      const alto = (d.v / tope) * ih, yTop = base - alto;
+      geo.push({ cx, top: yTop });
+      const r = Math.min(4, alto, bw / 2);
+      const camino = alto > 0 ? `M${x0},${base}V${yTop + r}Q${x0},${yTop} ${x0 + r},${yTop}H${x0 + bw - r}Q${x0 + bw},${yTop} ${x0 + bw},${yTop + r}V${base}Z` : '';
+      cols += `<g class="g-col" tabindex="0" data-i="${i}" role="img" aria-label="Entre ${d.h}:00 y ${d.h + 1}:00: ${d.v} ${d.v === 1 ? 'sello' : 'sellos'}"><rect class="g-hit" x="${m.l + banda * i}" y="${m.t - 6}" width="${banda}" height="${ih + 6}"/>${camino ? `<path class="g-barra" d="${camino}"/>` : ''}</g>`;
+      if ((d.h - h0) % cada === 0) etq += `<text class="g-eje" x="${cx}" y="${H - 7}" text-anchor="middle">${d.h}:00</text>`;
+    });
+    const dm = datos[iMax];
+    cont.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="group" aria-label="Sellos por hora del día. La hora más fuerte es entre ${dm.h}:00 y ${dm.h + 1}:00, con ${dm.v}.">${grid}${cols}${etq}<text class="g-valor" x="${geo[iMax].cx}" y="${geo[iMax].top - 7}" text-anchor="middle">${dm.v}</text></svg><div class="tooltip" hidden></div>`;
+    pintar($('#grafico-tabla'), `<table><thead><tr><th scope="col">Hora</th><th scope="col">Sellos</th></tr></thead><tbody>${datos.map((d) => `<tr><td>${d.h}:00 a ${d.h + 1}:00</td><td>${d.v}</td></tr>`).join('')}</tbody></table>`);
+    const tip = cont.querySelector('.tooltip');
+    const mostrar = (g) => {
+      const i = Number(g.dataset.i), d = datos[i];
+      const a = document.createElement('strong'); a.textContent = `${d.v} ${d.v === 1 ? 'sello' : 'sellos'}`;
+      const b = document.createElement('span'); b.textContent = `entre ${d.h}:00 y ${d.h + 1}:00`;
+      tip.replaceChildren(a, b);
+      tip.style.left = `${Math.min(W - 70, Math.max(70, geo[i].cx))}px`;
+      tip.style.top = `${geo[i].top}px`;
+      tip.hidden = false;
+    };
+    const ocultar = () => { tip.hidden = true; };
+    for (const g of $$('.g-col', cont)) {
+      g.addEventListener('pointerenter', () => mostrar(g));
+      g.addEventListener('pointerleave', ocultar);
+      g.addEventListener('focus', () => mostrar(g));
+      g.addEventListener('blur', ocultar);
+    }
+  }
+
+  /* ================= Navegación y eventos ================= */
+  function cambiarVista(v, enfocar = false) {
+    estado.vista = v;
+    for (const b of $$('[role="tab"]')) {
+      const on = b.dataset.tab === v;
+      b.setAttribute('aria-selected', String(on));
+      b.tabIndex = on ? 0 : -1;
+      if (on && enfocar) b.focus();
+    }
+    $('#v-tarjeta').hidden = v !== 'tarjeta';
+    $('#v-local').hidden = v !== 'local';
+    try { history.replaceState(null, '', location.pathname + location.search + (v === 'local' ? '#local' : '')); } catch (e) { /* nada */ }
+    firmaGrafico = '';
+    render();
+    if (v === 'local') cargarPanel();
+  }
+
+  function cablear() {
+    document.addEventListener('click', (ev) => {
+      const tab = ev.target.closest('[role="tab"]');
+      if (tab) { cambiarVista(tab.dataset.tab); return; }
+      if (ev.target.id === 'hoja-fondo') { cerrarHoja(); return; }
+      const b = ev.target.closest('[data-accion]');
+      if (!b || b.disabled) return;
+      switch (b.dataset.accion) {
+        case 'alta': abrirAlta(); break;
+        case 'crear': crearTarjeta(); break;
+        case 'cerrar-hoja': cerrarHoja(); break;
+        case 'simular': simularToque(); break;
+        case 'canjear': pedirCanje(); break;
+        case 'cancelar-canje': cancelarCanje(); break;
+        case 'ver-llave': estado.verLlave = !estado.verLlave; render(); break;
+        case 'copiar': copiar(b.dataset.texto || '', b); break;
+        case 'borrar': estado.confirmando = 'borrar'; render(); break;
+        case 'borrar-si': borrarTarjeta(); break;
+        case 'cancelar-confirmacion': estado.confirmando = null; render(); break;
+        case 'cerrar-aviso': estado.aviso = null; render(); break;
+        case 'salir': salir(); break;
+        default: break;
+      }
+    });
+    $('.pestanas').addEventListener('keydown', (ev) => {
+      if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+      ev.preventDefault();
+      cambiarVista(estado.vista === 'tarjeta' ? 'local' : 'tarjeta', true);
+    });
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') cerrarHoja(); });
+    $('#f-recuperar').addEventListener('submit', (ev) => { ev.preventDefault(); recuperar($('#in-recuperar').value); });
+    $('#f-login').addEventListener('submit', (ev) => { ev.preventDefault(); entrar(ev.target); });
+    $('#f-canje').addEventListener('submit', (ev) => { ev.preventDefault(); validarCanje($('#in-canje').value); });
+    const fc = $('#f-config');
+    fc.addEventListener('submit', (ev) => { ev.preventDefault(); guardarConfig(fc); });
+    fc.addEventListener('input', () => { estado.configSucia = true; ponerMsg($('#config-msg'), '', ''); });
+    fc.addEventListener('change', () => { estado.configSucia = true; });
+    $('#sel-local').addEventListener('change', (ev) => { estado.idPanel = ev.target.value; estado.panel = null; firmaGrafico = ''; estado.configSucia = false; cargarPanel(); });
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if (estado.vista === 'local' && estado.panel) dibujarGrafico(estado.panel.horas); }).observe($('#grafico'));
+
+    setInterval(() => {
+      const ahora = Date.now();
+      let vencio = false;
+      for (const el of $$('[data-hasta]')) {
+        const resto = Number(el.dataset.hasta) - ahora;
+        if (resto <= 0) { vencio = true; continue; }
+        el.textContent = el.dataset.fmt === 'mmss' ? fmtMMSS(resto) : fmtDuracion(resto);
+      }
+      if (vencio) render();
+    }, 1000);
+    // El panel se refresca solo cada 15 s mientras está a la vista.
+    setInterval(() => { if (estado.vista === 'local' && estado.sesion && !document.hidden) cargarPanel(); }, 15000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { bloqueoPara = null; render(); } });
+  }
+
+  /* ================= Arranque ================= */
+  async function iniciar() {
+    cablear();
+    const q = new URLSearchParams(location.search);
+    const s = normalizar(q.get('s'));
+    const v = normalizar(q.get('v'));
+    if (location.hash === '#local') estado.vista = 'local';
+    cambiarVista(estado.vista);
+
+    if (!configurado() || !window.supabase) {
+      estado.red = 'sin-config';
+      render();
+      return;
+    }
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+    try {
+      const { data } = await sb.auth.getSession();
+      estado.sesion = data.session;
+    } catch (e) { estado.sesion = null; }
+    sb.auth.onAuthStateChange((evento, sesion) => {
+      estado.sesion = sesion;
+      if (evento === 'SIGNED_OUT') { estado.locales = []; estado.panel = null; }
+      if (estado.vista === 'local') setTimeout(cargarPanel, 0);
+      render();
+    });
+
+    try {
+      if (s && s.length === 8) {
+        estado.pieza = s;
+        // El sticker se procesa una sola vez: al recargar, la página solo muestra la tarjeta.
+        try { history.replaceState(null, '', `${location.pathname}?v=${s}${location.hash}`); } catch (e) { /* nada */ }
+        await tocar(s);
+      } else if (v && v.length === 8) {
+        estado.pieza = v;
+        await cargarTarjeta(v);
+      } else {
+        const d = leer();
+        if (d.ultimo && d.tarjetas && d.tarjetas[d.ultimo]) {
+          estado.pieza = d.tarjetas[d.ultimo].pieza || null;
+          await cargarTarjeta(estado.pieza);
+        } else {
+          estado.red = 'ok';
+          await rpc('ping', {});
+        }
+      }
+    } catch (e) {
+      mostrarAviso('error', 'No se pudo cargar la tarjeta', mensajeError(e));
+    }
+    if (estado.tarjeta && estado.tarjeta.canje) vigilarCanje();
+    render();
+    if (estado.vista === 'local') cargarPanel();
+  }
+
+  iniciar();
+})();
+</script>
+
+</body>
+</html>
