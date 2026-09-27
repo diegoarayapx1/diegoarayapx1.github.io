@@ -6,6 +6,13 @@
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <title>Tarjeta de Sellos</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="icono-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sellos">
+<meta name="theme-color" content="#EDF1F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C1618" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@500;700&family=Public+Sans:wght@400;500;600;700&display=swap">
@@ -854,6 +861,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     panel: null,
     configSucia: false,
   };
+  // ¿Abierta desde el ícono de la pantalla de inicio?
+  const esInicio = (() => { try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } })();
+  const esIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const ahoraServidor = () => Date.now() + estado.desfase;
   const aLocal = (iso) => ms(iso) - estado.desfase;   // hora del servidor → reloj de este teléfono
 
@@ -1194,8 +1204,38 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const b = $('#hoja [data-accion="crear"]');
     if (b) b.focus();
   }
+  // Pantalla de inicio: iOS guarda la dirección que tiene la página en el momento de agregarla,
+  // pero no copia el almacenamiento de Safari. Por eso, mientras la hoja está abierta, la llave
+  // viaja en el fragmento (#k=…), que el navegador nunca envía a ningún servidor.
+  let urlConLlave = false;
+  function abrirInicio() {
+    const llave = secretoDe(estado.local && estado.local.id);
+    if (!llave) return;
+    try {
+      history.replaceState(null, '', `${location.pathname}${estado.pieza ? `?v=${estado.pieza}` : ''}#k=${llave}`);
+      urlConLlave = true;
+    } catch (e) { urlConLlave = false; }
+    focoPrevio = document.activeElement;
+    const pasos = esIOS
+      ? '<ol class="pasos"><li>Toca el botón <strong>Compartir</strong> de Safari (el cuadrado con la flecha hacia arriba).</li><li>Elige <strong>Agregar a inicio</strong>. Si no lo ves, está más abajo en la lista.</li><li>Toca <strong>Agregar</strong>.</li></ol>'
+      : '<ol class="pasos"><li>Abre el menú del navegador (los tres puntos).</li><li>Elige <strong>Agregar a la pantalla principal</strong> o <strong>Instalar</strong>.</li><li>Confirma.</li></ol>';
+    $('#hoja').innerHTML = `
+      <p class="hoja-eyebrow">${esc(estado.local.nombre)}</p>
+      <h2 id="hoja-titulo">Tu tarjeta en la pantalla de inicio</h2>
+      <p>Queda como un ícono para verla cuando quieras, sin buscar el link.</p>
+      ${pasos}
+      <p class="nota">Deja esta ventana abierta mientras la agregas: así el ícono se lleva tu tarjeta. Para sumar sellos sigues acercando el teléfono al atril.</p>
+      <div class="fila-botones"><button type="button" class="btn primario" data-accion="cerrar-hoja">Listo</button></div>`;
+    $('#hoja').hidden = false;
+    $('#hoja-fondo').hidden = false;
+  }
+
   function cerrarHoja() {
     if ($('#hoja').hidden) return;
+    if (urlConLlave) {
+      try { history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (e) { /* nada */ }
+      urlConLlave = false;
+    }
     $('#hoja').hidden = true;
     $('#hoja-fondo').hidden = true;
     if (focoPrevio && document.contains(focoPrevio)) { try { focoPrevio.focus(); } catch (e) { /* nada */ } }
@@ -1269,6 +1309,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       if (estado.red === 'sin-config') {
         return `<div class="panel"><h3>Falta configurar la conexión</h3><p class="nota">Edita el archivo y pega la URL del proyecto y la clave publicable de Supabase en <span class="mono">SUPABASE_URL</span> y <span class="mono">SUPABASE_KEY</span>.</p></div>`;
       }
+      if (esInicio) {
+        return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('info')}</span><h3>Trae tu tarjeta a este ícono</h3><p class="nota">En Safari, abre tu tarjeta, entra a “Qué guardamos de ti” y toca Copiar en la llave. Después pégala abajo, en Recuperar.</p></div>`;
+      }
       return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('nfc')}</span><h3>Acerca tu teléfono al atril</h3><p class="nota">Tu tarjeta de sellos aparece aquí la primera vez que tocas el sticker del local.</p></div>`;
     }
     const N = l.sellos_premio;
@@ -1330,7 +1373,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const prueba = l.espera_seg === 30 && estado.pieza
       ? `<button type="button" class="btn btn-ancho" data-accion="simular"${ocupadoAttr}>${icono('nfc')}Simular toque (modo prueba)</button>`
       : '';
-    return linea + prueba;
+    const inicio = esInicio ? '' : `<button type="button" class="btn enlace" data-accion="inicio">Agregar la tarjeta a la pantalla de inicio</button>`;
+    return linea + prueba + inicio;
   }
 
   function htmlDatos() {
@@ -1387,7 +1431,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     pintar($('#tarjeta'), htmlTarjeta());
     pintar($('#acciones'), htmlAcciones());
     pintar($('#datos-contenido'), htmlDatos());
-    $('#mis-datos').hidden = !estado.local;
+    $('#mis-datos').hidden = !estado.local && !esInicio;
+    if (esInicio && !estado.local && estado.red !== 'cargando') $('#mis-datos').open = true;
     const c = estado.tarjeta && estado.tarjeta.canje && aLocal(estado.tarjeta.canje.expira) > Date.now() ? estado.tarjeta.canje.codigo : null;
     pantallaEncendida(c);
   }
@@ -1576,6 +1621,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       if (!b || b.disabled) return;
       switch (b.dataset.accion) {
         case 'alta': abrirAlta(); break;
+        case 'inicio': abrirInicio(); break;
         case 'crear': crearTarjeta(); break;
         case 'cerrar-hoja': cerrarHoja(); break;
         case 'simular': simularToque(); break;
@@ -1628,6 +1674,10 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const q = new URLSearchParams(location.search);
     const s = normalizar(q.get('s'));
     const v = normalizar(q.get('v'));
+    // Llave que trae el ícono de la pantalla de inicio (#k=…). Se lee y se borra de la barra.
+    const mk = /^#k=([0-9A-Za-z-]{12,16})$/.exec(location.hash);
+    const llaveUrl = mk ? normalizar(mk[1]) : null;
+    if (mk) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* nada */ } }
     if (location.hash === '#local') estado.vista = 'local';
     cambiarVista(estado.vista);
 
@@ -1647,6 +1697,13 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       if (estado.vista === 'local') setTimeout(cargarPanel, 0);
       render();
     });
+
+    if (llaveUrl && llaveUrl.length === 12) {
+      try {
+        const r = await rpc('tarjeta_estado', { p_pieza: null, p_secreto: llaveUrl });
+        if (r.tarjeta) recordarTarjeta(r.local.id, v && v.length === 8 ? v : null, llaveUrl);
+      } catch (e) { /* sin conexión: sigue con lo que haya guardado */ }
+    }
 
     try {
       if (s && s.length === 8) {
