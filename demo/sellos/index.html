@@ -535,6 +535,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
 .vacio-ico { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); color: var(--primary); }
 .vacio-ico .ico { width: 24px; height: 24px; }
 .sticker { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--grid); }
+.t-extra { font-size: 13px; color: var(--paper-accent); }
+.l-extra { font-size: 12px; color: var(--muted); }
+.btn.enlace.enlace-inicio { align-self: center; min-height: 44px; padding: 0 10px; }
 </style>
 </head>
 <body>
@@ -860,6 +863,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     idPanel: null,
     panel: null,
     configSucia: false,
+    recuperarAbierto: false, // el ícono de inicio abre Recuperar una sola vez
   };
   // ¿Abierta desde el ícono de la pantalla de inicio?
   const esInicio = (() => { try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } })();
@@ -1217,7 +1221,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     } catch (e) { urlConLlave = false; }
     focoPrevio = document.activeElement;
     const pasos = esIOS
-      ? '<ol class="pasos"><li>Toca el botón <strong>Compartir</strong> de Safari (el cuadrado con la flecha hacia arriba).</li><li>Elige <strong>Agregar a inicio</strong>. Si no lo ves, está más abajo en la lista.</li><li>Toca <strong>Agregar</strong>.</li></ol>'
+      ? '<ol class="pasos"><li>Toca <strong>•••</strong> junto a la barra de direcciones de Safari y después <strong>Compartir</strong>. En iOS más antiguos, Compartir es directamente el cuadrado con la flecha hacia arriba.</li><li>Baja en la lista y elige <strong>Agregar a inicio</strong>.</li><li>Deja activado <strong>Abrir como app web</strong> (si aparece) y toca <strong>Agregar</strong>.</li></ol>'
       : '<ol class="pasos"><li>Abre el menú del navegador (los tres puntos).</li><li>Elige <strong>Agregar a la pantalla principal</strong> o <strong>Instalar</strong>.</li><li>Confirma.</li></ol>';
     $('#hoja').innerHTML = `
       <p class="hoja-eyebrow">${esc(estado.local.nombre)}</p>
@@ -1326,14 +1330,18 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       else slots += `<div class="t-slot${premio ? ' premio' : ''}"><span class="t-vacio">${premio ? 'PREMIO' : i + 1}</span></div>`;
     }
     const tiene = ciclo.length;
+    // Si el local bajó los sellos del premio, la tarjeta puede tener más que N: se muestran N
+    // y el resto se informa aparte (pasan a la próxima tarjeta después del canje).
+    const muestra = Math.min(tiene, N);
+    const extra = Math.max(0, tiene - N);
     const pr = `<span class="t-premio">${esc(l.premio)}</span>`;
     const progreso = !t ? `Junta ${N} sellos y te llevas ${pr}.`
-      : tiene >= N ? `<strong>Tarjeta completa.</strong> Canjea tu ${pr}.`
+      : tiene >= N ? `<strong>Tarjeta completa.</strong> Canjea tu ${pr}.${extra ? ` Tienes ${extra} ${extra === 1 ? 'sello extra que pasa' : 'sellos extra que pasan'} a la próxima tarjeta.` : ''}`
       : `<strong>${tiene} de ${N}</strong> · ${faltanTxt(N - tiene)} para ${pr}`;
-    return `<article class="tarjeta${vivo ? ' golpe' : ''}" style="--tinta:${TINTAS[l.tinta] || TINTAS.violeta}" aria-label="Tarjeta de sellos de ${esc(l.nombre)}: ${tiene} de ${N} sellos">
+    return `<article class="tarjeta${vivo ? ' golpe' : ''}" style="--tinta:${TINTAS[l.tinta] || TINTAS.violeta}" aria-label="Tarjeta de sellos de ${esc(l.nombre)}: ${muestra} de ${N} sellos">
       <div class="t-cab">
         <div><p class="t-eyebrow">Tarjeta de sellos</p><h1 class="t-nombre">${esc(l.nombre)}</h1></div>
-        <p class="t-cuenta" aria-hidden="true"><b>${tiene}</b>/${N}</p>
+        <p class="t-cuenta" aria-hidden="true"><b>${muestra}</b>/${N}${extra ? ` <span class="t-extra">+${extra}</span>` : ''}</p>
       </div>
       <div class="t-grilla" style="--cols:${COLUMNAS[N] || 4}">${slots}</div>
       <div class="t-pie">
@@ -1348,9 +1356,16 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     if (!l) return '';
     const ocupadoAttr = ocupado ? ' disabled' : '';
     if (!t) {
+      if (esInicio) {
+        // En el ícono de inicio, lo normal es traer la tarjeta que ya existe en Safari, no crear otra.
+        return `<p class="nota">¿Ya tienes tarjeta en Safari? Tráela con tu llave: ábrela en Safari, entra a “Qué guardamos de ti”, copia la llave y pégala abajo, en Recuperar.</p>
+          <button type="button" class="btn btn-ancho" data-accion="alta"${ocupadoAttr}>Crear una tarjeta nueva</button>`;
+      }
       return `<button type="button" class="btn primario btn-ancho" data-accion="alta"${ocupadoAttr}>Crear mi tarjeta</button>
         <p class="nota">La creas una vez y cada visita suma con solo acercar el teléfono al atril.</p>`;
     }
+    // El enlace para la pantalla de inicio va en todos los estados de la tarjeta.
+    const inicio = esInicio ? '' : `<button type="button" class="btn enlace enlace-inicio" data-accion="inicio">Agregar la tarjeta a la pantalla de inicio</button>`;
     const ahora = Date.now();
     if (t.canje && aLocal(t.canje.expira) > ahora) {
       const hasta = aLocal(t.canje.expira);
@@ -1360,11 +1375,11 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
         <p class="tk-txt">Muéstrale este código a quien te atiende para recibir tu ${esc(l.premio)}.</p>
         <p class="tk-vence">Vence en <span data-hasta="${hasta}" data-fmt="mmss">${fmtMMSS(hasta - ahora)}</span></p>
         <button type="button" class="btn" data-accion="cancelar-canje"${ocupadoAttr}>Cancelar canje</button>
-      </div>`;
+      </div>${inicio}`;
     }
     if (t.ciclo.length >= l.sellos_premio) {
       return `<button type="button" class="btn premio btn-ancho" data-accion="canjear"${ocupadoAttr}>Canjear ${esc(l.premio)}</button>
-        <p class="nota">Se genera un código de 4 dígitos que valida quien te atiende. Dura 10 minutos.</p>`;
+        <p class="nota">Se genera un código de 4 dígitos que valida quien te atiende. Dura 10 minutos.</p>${inicio}`;
     }
     const listo = t.proximo ? aLocal(t.proximo) : 0;
     const linea = listo > ahora
@@ -1373,7 +1388,6 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const prueba = l.espera_seg === 30 && estado.pieza
       ? `<button type="button" class="btn btn-ancho" data-accion="simular"${ocupadoAttr}>${icono('nfc')}Simular toque (modo prueba)</button>`
       : '';
-    const inicio = esInicio ? '' : `<button type="button" class="btn enlace" data-accion="inicio">Agregar la tarjeta a la pantalla de inicio</button>`;
     return linea + prueba + inicio;
   }
 
@@ -1389,6 +1403,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     const d = new Date(ultima);
     const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const N = l.sellos_premio, enCiclo = t.ciclo.length;
+    const enTarjeta = Math.min(enCiclo, N), sobran = Math.max(0, enCiclo - N);
     const puntos = Array.from({ length: N }, (_, i) => `<i class="${i < enCiclo ? 'on' : ''}"></i>`).join('');
     const confirmar = estado.confirmando === 'borrar'
       ? `<div class="confirmar">
@@ -1415,8 +1430,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       <div class="espejo">
         <p class="espejo-lbl">Así te ve el local</p>
         <ul class="lista"><li>
-          <div class="l-izq"><p class="l-cod">${esc(t.ref)}</p><div class="puntos" aria-label="${enCiclo} de ${N} sellos">${puntos}</div></div>
-          <div class="l-der"><p class="l-num">${enCiclo}/${N}</p><p class="l-meta">${esc(diaRelativo(ymd))}</p></div>
+          <div class="l-izq"><p class="l-cod">${esc(t.ref)}</p><div class="puntos" aria-label="${enTarjeta} de ${N} sellos${sobran ? ` y ${sobran} extra` : ''}">${puntos}</div></div>
+          <div class="l-der"><p class="l-num">${enTarjeta}/${N}${sobran ? ` <span class="l-extra">+${sobran}</span>` : ''}</p><p class="l-meta">${esc(diaRelativo(ymd))}</p></div>
         </li></ul>
         <p class="nota">Además ve la actividad del día. De días anteriores solo ve la fecha de tu última visita y los sellos sumados por hora.</p>
       </div>
@@ -1432,7 +1447,11 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     pintar($('#acciones'), htmlAcciones());
     pintar($('#datos-contenido'), htmlDatos());
     $('#mis-datos').hidden = !estado.local && !esInicio;
-    if (esInicio && !estado.local && estado.red !== 'cargando') $('#mis-datos').open = true;
+    // En el ícono de inicio sin tarjeta, lo útil es Recuperar: se abre una sola vez (el cliente puede cerrarlo).
+    if (esInicio && !estado.tarjeta && estado.red !== 'cargando' && !estado.recuperarAbierto) {
+      $('#mis-datos').open = true;
+      estado.recuperarAbierto = true;
+    }
     const c = estado.tarjeta && estado.tarjeta.canje && aLocal(estado.tarjeta.canje.expira) > Date.now() ? estado.tarjeta.canje.codigo : null;
     pantallaEncendida(c);
   }
@@ -1485,9 +1504,11 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       ? `<ul class="lista">${p.tarjetas.slice(0, 20).map((t) => {
           const puntos = Array.from({ length: N }, (_, i) => `<i class="${i < t.ciclo ? 'on' : ''}"></i>`).join('');
           const chip = t.pendiente ? '<span class="chip pend">Canje pendiente</span>' : t.ciclo >= N ? '<span class="chip listo">Premio listo</span>' : '';
+          // Si se bajaron los sellos del premio, una tarjeta puede tener más que N: N + los que sobran.
+          const enTarjeta = Math.min(t.ciclo, N), sobran = Math.max(0, t.ciclo - N);
           return `<li>
-            <div class="l-izq"><p class="l-cod">${esc(t.ref)} ${chip}</p><div class="puntos" aria-label="${t.ciclo} de ${N} sellos">${puntos}</div></div>
-            <div class="l-der"><p class="l-num">${t.ciclo}/${N}</p><p class="l-meta">${esc(diaRelativo(t.ultima_visita))}</p></div>
+            <div class="l-izq"><p class="l-cod">${esc(t.ref)} ${chip}</p><div class="puntos" aria-label="${enTarjeta} de ${N} sellos${sobran ? ` y ${sobran} extra` : ''}">${puntos}</div></div>
+            <div class="l-der"><p class="l-num">${enTarjeta}/${N}${sobran ? ` <span class="l-extra">+${sobran}</span>` : ''}</p><p class="l-meta">${esc(diaRelativo(t.ultima_visita))}</p></div>
           </li>`;
         }).join('')}</ul>${p.tarjetas.length > 20 ? `<p class="nota">Y ${p.tarjetas.length - 20} tarjetas más.</p>` : ''}`
       : '<p class="nota">Aún no hay tarjetas. La primera aparece cuando alguien toca el atril.</p>');
