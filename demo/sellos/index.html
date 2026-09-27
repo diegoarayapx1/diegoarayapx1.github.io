@@ -594,6 +594,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
           </div>
           <p id="recuperar-msg" class="msg" role="status"></p>
         </form>
+        <p class="nota version">Versión de la página: 27-09 19:59</p>
       </div>
     </details>
   </section>
@@ -865,11 +866,23 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     configSucia: false,
     recuperarAbierto: false, // el ícono de inicio abre Recuperar una sola vez
     toqueSinSellar: null,    // pieza tocada sin tarjeta guardada (suma si la recupera con la llave)
+    llaveIcono: null,        // solo en el ícono: 'ok' | 'sin-llave' | 'borrada' (qué traía su dirección)
   };
   // ¿Abierta desde el ícono de la pantalla de inicio?
   const esInicio = (() => { try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } })();
   const esIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const TXT_TRAER = 'Tu tarjeta vive en Safari: ábrela ahí (acercando el teléfono al atril), toca “Agregar la tarjeta a la pantalla de inicio” y agrega el ícono de nuevo. O copia tu llave en Safari, desde “Qué guardamos de ti”, y pégala abajo, en Recuperar.';
+  function txtTraer() {
+    if (estado.llaveIcono === 'borrada') return {
+      titulo: 'La tarjeta de este ícono ya no existe',
+      texto: 'El ícono se creó con una tarjeta que después se borró, y un ícono no se actualiza solo. Bórralo de la pantalla de inicio y agrégalo de nuevo desde tu tarjeta en Safari, o pega tu llave abajo, en Recuperar.',
+    };
+    if (estado.llaveIcono === 'sin-llave') return {
+      titulo: 'Este ícono se creó sin tu llave',
+      texto: 'Bórralo de la pantalla de inicio y agrégalo de nuevo desde tu tarjeta en Safari con el botón “Agregar la tarjeta a la pantalla de inicio”, sin cerrar la ventana de instrucciones. O pega tu llave abajo, en Recuperar.',
+    };
+    return { titulo: 'Este ícono todavía no tiene tu tarjeta', texto: TXT_TRAER };
+  }
   const ahoraServidor = () => Date.now() + estado.desfase;
   const aLocal = (iso) => ms(iso) - estado.desfase;   // hora del servidor → reloj de este teléfono
 
@@ -914,7 +927,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
 
   /* ================= Tarjeta del cliente ================= */
   // Carga el estado sin sellar. Resuelve de qué local es el sticker y si este teléfono ya tiene tarjeta ahí.
-  async function cargarTarjeta(pieza) {
+  async function cargarTarjeta(pieza, vigente) {
     const d = leer();
     let idLocal = pieza ? (d.piezas && d.piezas[pieza]) : d.ultimo;
     let secreto = secretoDe(idLocal);
@@ -926,8 +939,36 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       r = await rpc('tarjeta_estado', { p_pieza: pieza || null, p_secreto: secreto });
     }
     if (secreto && !r.tarjeta) olvidarTarjeta(idLocal);   // la llave ya no existe en el servidor
+    if (vigente && !vigente()) return r;   // un refresco que se cruzó con una acción: manda la acción
     aplicar(r);
+    ultimaCarga = Date.now();
     return r;
+  }
+
+  // Al volver a la pantalla se pide la tarjeta de nuevo. iOS no recarga una web app (ni una pestaña)
+  // cuando vuelves a ella: la muestra tal como quedó, y el ícono no tiene botón de recargar.
+  // Caso típico: el ícono abierto, tocas el atril, se abre Safari y suma; al volver al ícono, se actualiza.
+  let ultimaCarga = 0, refrescando = false, acciones = 0;
+  async function refrescar() {
+    if (!sb || refrescando || ocupado || vigilando || estado.toquePendiente || document.visibilityState !== 'visible') return;
+    if (Date.now() - ultimaCarga < 3000) return;
+    ultimaCarga = Date.now();
+    refrescando = true;
+    try {
+      if (estado.vista === 'local') { await cargarPanel(); return; }
+      if (!estado.local) return;
+      const antes = estado.tarjeta ? { ref: estado.tarjeta.ref, total: estado.tarjeta.total } : null;
+      const n = acciones;
+      await cargarTarjeta(estado.pieza, () => acciones === n && !ocupado);
+      if (acciones !== n) return;
+      const t = estado.tarjeta;
+      // Si se sumó un sello mientras no mirabas, el sello nuevo se "estampa" al volver.
+      if (t && antes && t.ref === antes.ref && t.total > antes.total && t.ciclo.length) {
+        estado.recien = { t: ms(t.ciclo[t.ciclo.length - 1]), hasta: Date.now() + 900 };
+      }
+      if (t && t.canje) vigilarCanje();
+    } catch (e) { /* sin conexión: se queda con lo que muestra */ }
+    finally { refrescando = false; render(); }
   }
 
   // Toque real en el atril (?s=PIEZA).
@@ -979,6 +1020,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
   async function conBloqueo(fn) {
     if (ocupado) return;
     ocupado = true;
+    acciones++;
     try { await fn(); } finally { ocupado = false; render(); }
   }
 
@@ -1057,6 +1099,7 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
   });
 
   async function recuperar(texto) {
+    acciones++;
     const msg = $('#recuperar-msg');
     const llave = normalizar(texto);
     if (llave.length !== 12) return ponerMsg(msg, 'error', 'La llave tiene 12 caracteres, por ejemplo K7Q4-XM2P-8D3F.');
@@ -1355,7 +1398,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
         return `<div class="panel"><h3>Falta configurar la conexión</h3><p class="nota">Edita el archivo y pega la URL del proyecto y la clave publicable de Supabase en <span class="mono">SUPABASE_URL</span> y <span class="mono">SUPABASE_KEY</span>.</p></div>`;
       }
       if (esInicio) {
-        return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('info')}</span><h3>Este ícono todavía no tiene tu tarjeta</h3><p class="nota">${TXT_TRAER}</p></div>`;
+        const x = txtTraer();
+        return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('info')}</span><h3>${x.titulo}</h3><p class="nota">${x.texto}</p></div>`;
       }
       return `<div class="panel vacio-tarjeta"><span class="vacio-ico">${icono('nfc')}</span><h3>Acerca tu teléfono al atril</h3><p class="nota">Tu tarjeta de sellos aparece aquí la primera vez que tocas el sticker del local.</p></div>`;
     }
@@ -1400,7 +1444,8 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
       if (esInicio) {
         // El ícono no crea tarjetas: los toques del atril abren Safari, así que una tarjeta creada
         // aquí quedaría separada de la que suma sellos. Solo se trae la que ya existe.
-        return `<p class="nota">${TXT_TRAER}</p>`;
+        const x = txtTraer();
+        return `<p class="nota"><strong>${x.titulo}.</strong> ${x.texto}</p>`;
       }
       return `<button type="button" class="btn primario btn-ancho" data-accion="alta"${ocupadoAttr}>Crear mi tarjeta</button>
         <p class="nota">La creas una vez y cada visita suma con solo acercar el teléfono al atril.</p>`;
@@ -1718,8 +1763,14 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     $('#sel-local').addEventListener('change', (ev) => { estado.idPanel = ev.target.value; estado.panel = null; firmaGrafico = ''; estado.configSucia = false; cargarPanel(); });
     if ('ResizeObserver' in window) new ResizeObserver(() => { if (estado.vista === 'local' && estado.panel) dibujarGrafico(estado.panel.horas); }).observe($('#grafico'));
 
+    let ultimoTic = Date.now();
     setInterval(() => {
       const ahora = Date.now();
+      // iOS congela las apps y pestañas en segundo plano: si entre dos tics pasaron varios segundos,
+      // la página acaba de volver a la pantalla (aunque no llegue el evento de visibilidad).
+      const volvio = ahora - ultimoTic > 4000;
+      ultimoTic = ahora;
+      if (volvio || (estado.vista === 'tarjeta' && ahora - ultimaCarga > 30000)) refrescar();
       let vencio = false;
       for (const el of $$('[data-hasta]')) {
         const resto = Number(el.dataset.hasta) - ahora;
@@ -1730,7 +1781,9 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
     }, 1000);
     // El panel se refresca solo cada 15 s mientras está a la vista.
     setInterval(() => { if (estado.vista === 'local' && estado.sesion && !document.hidden) cargarPanel(); }, 15000);
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { bloqueoPara = null; render(); } });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { bloqueoPara = null; render(); refrescar(); } });
+    window.addEventListener('focus', refrescar);
+    window.addEventListener('pageshow', (ev) => { if (ev.persisted) refrescar(); });
   }
 
   /* ================= Arranque ================= */
@@ -1780,11 +1833,13 @@ input[type="email"]:focus, input[type="password"]:focus { border-color: var(--pr
 
     // En el ícono, la llave de su dirección manda: se adopta si es válida para ese local
     // (también reemplaza una tarjeta vieja que hubiera quedado guardada en el ícono).
+    if (esInicio) estado.llaveIcono = llaveUrl.length !== 12 ? 'sin-llave' : conocida ? 'ok' : null;
     if (esInicio && llaveUrl.length === 12 && !conocida) {
       const pv = v && v.length === 8 ? v : null;
       try {
         const r = await rpc('tarjeta_estado', { p_pieza: pv, p_secreto: llaveUrl });
-        if (r.tarjeta) recordarTarjeta(r.local.id, pv, llaveUrl);
+        if (r.tarjeta) { recordarTarjeta(r.local.id, pv, llaveUrl); estado.llaveIcono = 'ok'; }
+        else estado.llaveIcono = 'borrada';
       } catch (e) { /* sin conexión o sticker desactivado: sigue con lo que haya guardado */ }
     }
 
