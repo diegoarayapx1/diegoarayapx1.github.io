@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prueba de avisos</title>
+<link rel="apple-touch-icon" href="/demo/sellos/icono-180.png">
+<meta name="theme-color" content="#1D4650">
+<style>
+  :root { --tinta: #132A30; --suave: #55686D; --borde: #D4DDDC; --fondo: #EDF1F0; --acento: #1D4650; --ok: #1F7A4D; --mal: #B3261E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; background: var(--fondo); color: var(--tinta);
+         padding: max(16px, env(safe-area-inset-top)) 16px max(32px, env(safe-area-inset-bottom)); }
+  main { max-width: 520px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p { color: var(--suave); font-size: 14px; line-height: 1.45; margin: 4px 0 10px; }
+  .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 14px; padding: 14px 16px; margin: 12px 0; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
+  dt { color: var(--suave); }
+  dd { margin: 0; font-weight: 600; word-break: break-all; }
+  .si { color: var(--ok); }
+  .no { color: var(--mal); }
+  button { font: inherit; font-size: 15px; font-weight: 600; border: 0; border-radius: 10px; padding: 12px 14px;
+           background: var(--acento); color: #fff; width: 100%; margin-top: 8px; }
+  button.secundario { background: #fff; color: var(--acento); border: 1px solid var(--acento); }
+  button:disabled { opacity: .45; }
+  textarea { width: 100%; min-height: 120px; font: 12px ui-monospace, Menlo, Consolas, monospace; border: 1px solid var(--borde); border-radius: 10px; padding: 10px; }
+  #registro { font: 12px ui-monospace, Menlo, Consolas, monospace; white-space: pre-wrap; color: var(--suave); }
+  #e-url { word-break: break-all; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Prueba de avisos</h1>
+  <p>Sirve para confirmar que este teléfono recibe avisos. No envía nada a ningún servidor: la suscripción solo se muestra aquí para que la copies.</p>
+
+  <section class="tarjeta">
+    <dl>
+      <dt>Abierta desde inicio</dt><dd id="e-app">…</dd>
+      <dt>Llave en la dirección</dt><dd id="e-llave">…</dd>
+      <dt>Admite avisos</dt><dd id="e-soporte">…</dd>
+      <dt>Service worker</dt><dd id="e-sw">…</dd>
+      <dt>Permiso</dt><dd id="e-permiso">…</dd>
+      <dt>Suscripción</dt><dd id="e-sub">…</dd>
+    </dl>
+  </section>
+
+  <section class="tarjeta">
+    <p id="ayuda">Cargando…</p>
+    <button id="b-activar" disabled>Activar avisos</button>
+    <button id="b-local" class="secundario" disabled>Mostrar un aviso de prueba (sin servidor)</button>
+    <button id="b-desactivar" class="secundario" disabled>Desactivar avisos</button>
+  </section>
+
+  <section class="tarjeta" id="bloque-sub" hidden>
+    <p>Suscripción de este teléfono. Envíatela a ti mismo (por WhatsApp o correo) para pegarla en la VM.</p>
+    <textarea id="sub" readonly></textarea>
+    <button id="b-compartir">Compartir</button>
+    <button id="b-copiar" class="secundario">Copiar</button>
+  </section>
+
+  <section class="tarjeta">
+    <p>Dirección: <span id="e-url"></span></p>
+    <div id="registro"></div>
+  </section>
+</main>
+
+<script>
+// Llave pública VAPID (es pública por diseño). La privada queda solo en la VM.
+const VAPID_PUBLICA = 'BJ4rAcFjcFlAKaDWZ9S4zXU-1bXz6XY-K8zYf31CMuUEK_T8w5vwWn5CpNtFr9QNuF2v_oVjIVhhTgbT8j9vh-A';
+
+const $ = (id) => document.getElementById(id);
+const log = (m) => { $('registro').textContent += `${new Date().toLocaleTimeString('es-CL')}  ${m}\n`; };
+const marcar = (el, ok, si = 'sí', no = 'no') => { el.textContent = ok ? si : no; el.className = ok ? 'si' : 'no'; };
+
+const esApp = window.navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+const llave = new URLSearchParams(location.search).get('k');
+const soporta = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let registro = null;
+
+function urlBase64ABytes(b64) {
+  const relleno = '='.repeat((4 - (b64.length % 4)) % 4);
+  const bin = atob((b64 + relleno).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+}
+
+function mostrarSuscripcion(sub) {
+  $('sub').value = JSON.stringify({ ...sub.toJSON(), abrir: location.href });
+  $('bloque-sub').hidden = false;
+}
+
+async function refrescar() {
+  marcar($('e-app'), esApp);
+  $('e-llave').textContent = llave || '(ninguna)';
+  $('e-llave').className = llave ? 'si' : 'no';
+  marcar($('e-soporte'), soporta);
+  marcar($('e-sw'), !!registro, 'registrado', 'no');
+  $('e-url').textContent = location.href;
+
+  const permiso = 'Notification' in window ? Notification.permission : 'no disponible';
+  $('e-permiso').textContent = permiso;
+  $('e-permiso').className = permiso === 'granted' ? 'si' : (permiso === 'denied' ? 'no' : '');
+
+  let sub = null;
+  if (registro && registro.pushManager) sub = await registro.pushManager.getSubscription();
+  marcar($('e-sub'), !!sub, 'activa', 'no');
+  if (sub) mostrarSuscripcion(sub); else $('bloque-sub').hidden = true;
+
+  if (!soporta && esIOS && !esApp) {
+    $('ayuda').textContent = 'En iPhone los avisos solo funcionan desde el ícono de inicio: en Safari toca Compartir → Agregar a inicio y abre la página desde ese ícono.';
+  } else if (!soporta) {
+    $('ayuda').textContent = 'Este navegador no admite avisos.';
+  } else if (permiso === 'denied') {
+    $('ayuda').textContent = 'Los avisos están bloqueados para esta página. Se vuelven a permitir en los ajustes del teléfono.';
+  } else {
+    $('ayuda').textContent = 'Toca "Activar avisos" y acepta el permiso.';
+  }
+  $('b-activar').disabled = !soporta || !registro || !!sub;
+  $('b-local').disabled = !registro || permiso !== 'granted';
+  $('b-desactivar').disabled = !sub;
+}
+
+$('b-activar').addEventListener('click', async () => {
+  try {
+    if (VAPID_PUBLICA.startsWith('PEGA-AQUI')) throw new Error('falta la llave pública VAPID en la página');
+    // En iOS el permiso tiene que pedirse directo en el toque del botón.
+    const permiso = await Notification.requestPermission();
+    log(`Permiso: ${permiso}`);
+    if (permiso === 'granted') {
+      let sub = await registro.pushManager.getSubscription();
+      if (!sub) sub = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ABytes(VAPID_PUBLICA) });
+      log(`Suscripción creada en ${new URL(sub.endpoint).host}`);
+    }
+  } catch (e) {
+    log(`Error al activar: ${e.name}: ${e.message}`);
+  }
+  refrescar();
+});
+
+$('b-local').addEventListener('click', async () => {
+  try {
+    await registro.showNotification('Aviso local de prueba', {
+      body: 'Si ves esto, el teléfono muestra avisos de esta página.',
+      icon: '/demo/sellos/icono-180.png',
+      data: { url: location.href },
+    });
+    log('Aviso local mostrado');
+  } catch (e) {
+    log(`Error en el aviso local: ${e.name}: ${e.message}`);
+  }
+});
+
+$('b-desactivar').addEventListener('click', async () => {
+  try {
+    const sub = await registro.pushManager.getSubscription();
+    if (sub) { await sub.unsubscribe(); log('Suscripción eliminada'); }
+  } catch (e) {
+    log(`Error al desactivar: ${e.name}: ${e.message}`);
+  }
+  refrescar();
+});
+
+$('b-compartir').addEventListener('click', async () => {
+  try {
+    if (!navigator.share) throw new Error('este navegador no permite compartir; usa Copiar');
+    await navigator.share({ text: $('sub').value });
+  } catch (e) {
+    if (e.name !== 'AbortError') log(`Error al compartir: ${e.message}`);
+  }
+});
+
+$('b-copiar').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText($('sub').value);
+    log('Suscripción copiada');
+  } catch {
+    $('sub').select();
+    log('No se pudo copiar solo: mantén presionado el texto y copia.');
+  }
+});
+
+(async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      registro = await navigator.serviceWorker.register('sw.js');
+      await navigator.serviceWorker.ready;
+      log(`Service worker listo (alcance ${registro.scope})`);
+    } catch (e) {
+      log(`Error al registrar el service worker: ${e.message}`);
+    }
+  }
+  refrescar();
+})();
+</script>
+</body>
+</html>
